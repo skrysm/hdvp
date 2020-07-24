@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
+        "HDVP",
+        "Preimage",
         "editorconfig",
         "markdownlint"
     ],
@@ -11,5 +13,7 @@
         "MD036": false,
         // Fenced code blocks should have a language specified
         "MD040": false,
+        // No need for consistent code blocks
+        "MD046": false,
     }
 }
