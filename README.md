@@ -1,6 +1,6 @@
 # Human Data Verification Protocol (HDVP)
 
-The *Human Data Verification Protocol* is a tamper-proof(ish) way of transmitting arbitrary data over an insecure network. To verify that the data was not modified by a man-in-the-middle attacker, a human user must enter a short code on the receiver side. This code (called **verification code**) is basically a hash of transmitted data - but with some extensions (see below).
+The *Human Data Verification Protocol* is a tamper-proof(ish) way of transmitting arbitrary data over an insecure network. To verify that the data was not modified by a man-in-the-middle attacker, a human user must enter a short code on the receiver side. This code (called an **HDVP verification code**) is basically a hash of transmitted data - but with some extensions (see below).
 
 ## Use Case
 
@@ -17,7 +17,7 @@ Also, HDVP is designed primarily for home or small business networks. Large comp
 The basic design of HDVP consists of:
 
 * a server (e.g. a HTTP server) that hosts the binary data (so that it can be downloaded by the client); it also "displays" the **verification code** to the user.
-* a client application: the user calls it (on the machine where to download the binary data to; e.g. the freshly installed server) with the ip address/hostname of the HDVP server and the verification code provided by the server. The application then downloads the binary data and verifies it against the verification code.
+* a client application: the user calls it (on the machine where they want to download the binary data to; e.g. the freshly installed server) with the ip address/hostname of the HDVP server and the verification code provided by the server. The client application then downloads the binary data and verifies it against the verification code.
 
 *Note:* The HDVP implementation actually just provides the APIs for creating and verifying the verification code. There is no network code in HDVP. It must be provided by the user of HDVP.
 
@@ -50,15 +50,15 @@ An alternative way to implement the verification code would be to interpret it a
 This way was not chosen because of the following difficulties:
 
 * The HDVP server provides both the verification code as well as the binary data to transfer. If the verification code was secret, special measures would need to be taken to make sure that an attacker couldn't access the verification code.
-* Encryption alone doesn't guarantee the integrity of the data. Thus, a hash would need to be incorporated into the binary data. And then we would need to make sure that we could detect changes by an attacker - and that an attack is still sufficiently difficult. The author finds that understanding the security properties of an encryption algorithm is a lot harder than understanding the security properties of a hash algorithm. Because of this (and because secrecy was never the goal for HDVP), the author was not comfortable with using encryption (over hashing).
+* Encryption alone doesn't guarantee the integrity of the data. Thus, some kind of hash would need to be integrated into the encrypted data anyways.
 
 ### Definition: Attacking HDVP
 
 The security design of HDVP assumes that an attacker can manipulate *any* communication between the HDVP server and the HDVP client. It also assumes that all information required to calculate a verification code is known to the attacker.
 
-*Note:* It is assumed that the attacker can *only* manipulate the communication between the HDVP server and the HDVP client; i.e. that they can *neither* manipulate the communication between server and user nor between client and user.
+*Note:* It is assumed that the attacker can *only* manipulate the communication between the HDVP server and the HDVP client; i.e. they can *neither* manipulate the communication between server and user (i.e. change the verification code displayed to the user) nor between client and user (i.e. change the verification code the user enters on the client side).
 
-A successful attack against HDVP is called **breaking the verification code**. In this case, the attacker successfully modifies the binary data in such a way that it generates the same verification code as the original data (this is called a [Preimage attack](https://en.wikipedia.org/wiki/Preimage_attack)). Additionally, the attack is considered successful *only* if the attacker managed to find *meaningful* binary data that generate the same verification code as the original data. Finding just some random *meaningless* data that matches the verification code is *not* considered a successful attack (because the attacker would not gain anything from this attack).
+A successful attack against HDVP is called **breaking the verification code**. In this case, the attacker successfully modifies the binary data in such a way that it generates the same verification code as the original data (this is called a [Preimage attack](https://en.wikipedia.org/wiki/Preimage_attack)). Additionally, the attack is considered successful *only* if the attacker managed to find *meaningful* binary data that generates the same verification code as the original data. Finding just some random *meaningless* data that matches the verification code is *not* considered a successful attack (because the attacker would not gain anything from this attack).
 
 ### Verification Code Design Step 1: Selecting the Hash Algorithm
 
@@ -75,6 +75,8 @@ The last condition means that breaking the verification code through a brute-for
 As a result the hash algorithm for HDVP is: **[Argon2id](https://en.wikipedia.org/wiki/Argon2)**.
 
 [This post](https://security.stackexchange.com/a/216381/106930) was used as basis for the decision.
+
+*Note:* If the selected slow hash has no guarantees regarding a preimage attack, implementations may first use a "fast hash" (like SHA-2) to hash the binary data and then use the slow hash on this hash.
 
 ### Verification Code Design Step 2: Shorten the Hash
 
@@ -100,24 +102,24 @@ Based on the main use case mentioned above, let's assume the binary data is inde
 
 This is problematic because in this case an attacker has a long time to try to break the verification code. The attacker would only then start their attack once they have broken the verification code.
 
-To counteract this, HDVP "[salts](https://en.wikipedia.org/wiki/Salt_(cryptography))" the hash with some random binary data (the salt). The salt is changed every 5 minutes. This way, **the verification code changes every 5 minutes** (its "lifetime"). And since the salt is randomly chosen, an attacker can no longer predict the (next) verification code. This way, the time window for breaking a verification code is effectively limited to 5 minutes.
+To counteract this, HDVP "[salts](https://en.wikipedia.org/wiki/Salt_(cryptography))" the hash with some random binary data (called: the salt). The salt is changed every minute. This way, **the verification code changes every minute** (its "lifetime"). And since the salt is randomly chosen, an attacker can no longer predict the (next) verification code. This way, the time window for breaking a verification code is effectively limited to 1 minute.
 
 *Note:* The salt is not secret. It is transferred to the client over the same insecure network connection. The ability of an attacker to modify to salt does *not* increase the time frame they have to break the verification code as the next verification code can still not be guessed by the attacker.
 
-It is the author's (unverified) impression that the ability for an attacker to arbitrarily modify the salt make it easier for them to break the verification code (within its lifetime). To make it harder for the attacker, the **salt is set to a fixed length of 32 bytes**. This way an attacker can't vary the length of the salt to get the desired verification code.
+The ability for an attacker to arbitrarily modify the salt makes it easier for them to break the verification code (within its lifetime). To make it harder for the attacker, the **salt is set to a fixed length of 32 bytes**. This way an attacker can't vary the length of the salt to get the desired verification code.
 
 ## Attack Estimation
 
-Let's assume the attacker manipulates the binary data to something specific and then tries to break the verification code just by modifying the salt.
+Let's assume the attacker manipulates the binary data to something specific and then tries to break the verification code *just* by modifying the salt.
 
 The salt is 32 bytes long. That's 256 bit or 2^256 different values.
 
-Furthermore, one need to know that a (good) cryptographic hash algorithm can *only* be broken through a brute-force attack (i.e. just trying values).
+Furthermore, one needs to know that a (good) cryptographic hash algorithm can *only* be broken through a brute-force attack (i.e. just trying values until one finds the desired hash).
 
-The worst case for the attacker is try all these values and only the last value is the one that breaks the verification code. However, in "practice" the whole process is a process of chance (or luck). The more values the attacker tries, the higher the chance that the next value will break the verification code.
+The number of values an attacker has to try until they find a matching hash highly depends on the hash itself, the hash algorithm and the way the attacker choses their data - basically saying, that the number can't be determined in general. However, the number can be determined statistically (i.e. on average).
 
-In cryptography there's something called a [birthday attack](https://en.wikipedia.org/wiki/Birthday_attack). It basically states that for a given `n` bits a collision can be found by trying `2^(n/2)` values. Assuming an 9 characters verification, that's `(9 - 1) * 5 = 40` bit. For 40 bit this would be `2^20` which is 1,048,576.
+In cryptography this is called a [birthday attack](https://en.wikipedia.org/wiki/Birthday_attack). It basically states that for a given `n` bits a collision can be found (on average) by trying `2^(n/2)` values. Assuming a 9 characters HDVP verification code, that's `(9 - 1) * 5 = 40` bit. For 40 bit this would be `2^20` which is 1,048,576.
 
-Given the 5 minute time frame mention above, the attacker would need to be able to calculate 3,495 hashes per second (but then could only run the attack if the user verified the binary data in the last second of the 5 minute time frame). This why it is important that HDVP uses a slow hash (with an estimation of 2 hashes per second).
+Given the 1 minute time frame mention above, the attacker would need to be able to calculate 17,476 hashes per second. This why it is important that HDVP uses a slow hash (with an estimation of 2 hashes per second).
 
-For comparison, a 12 character verification code (55 bit) would require the attacker to calculate 632,708 hashes per second.
+For comparison, a 12 character verification code (55 bit) would require the attacker to calculate 3,163,542 hashes per second.
