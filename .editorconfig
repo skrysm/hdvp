@@ -31,6 +31,13 @@ indent_size = 4
 
 
 #
+# Windows batch files
+#
+[*.{bat,cmd}]
+end_of_line = crlf
+
+
+#
 # C# files
 #
 [*.cs]

@@ -6,6 +6,10 @@
         "markdownlint"
     ],
 
+    "files.associations": {
+        "*.DotSettings": "xml",
+    },
+
     "markdownlint.config": {
         // No trailing punctuation in heading
         "MD026": false,
@@ -13,7 +17,7 @@
         "MD036": false,
         // Fenced code blocks should have a language specified
         "MD040": false,
-        // No need for consistent code blocks
+        // Inconsistent code blocks are sometimes nicer to write
         "MD046": false,
     }
 }

@@ -1,0 +1,27 @@
+<!--
+  Default settings for all test projects.
+
+  To use it, create a .NET Core or .NET Standard project (modern project format)
+  and then add this line at the top:
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Tests.props', '$(MSBuildThisFileDirectory)'))" />
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(MSBuildThisFileDirectory)Project.Shared.props" />
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="Shouldly" Version="3.0.2" />
+    <PackageReference Include="xunit.core" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
