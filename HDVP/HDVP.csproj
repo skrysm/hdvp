@@ -6,4 +6,13 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <!--
+    NuGet (and assembly) properties
+    See 'Project.Code.props' for more details.
+  -->
+  <PropertyGroup>
+    <PackageId>HDVP</PackageId>
+    <Description>The human data verification protocol.</Description>
+    <Authors>Sebastian Krysmanski</Authors>
+  </PropertyGroup>
 </Project>
