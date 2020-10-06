@@ -82,8 +82,8 @@ namespace HDVP
         [MustUseReturnValue]
         private static byte[] GetSlowHash(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
         {
-            // TODO: Calculate byte count from code length
-            return HdvpSlowHashAlgorithm.CreateHash(data.Hash.ToArray(), salt.ToArray(), byteCount: 16);
+            int byteCount = CodeEncoding.GetRequiredByteCount(codeLength);
+            return HdvpSlowHashAlgorithm.CreateHash(data.Hash.ToArray(), salt.ToArray(), byteCount: byteCount);
         }
 
         [MustUseReturnValue]

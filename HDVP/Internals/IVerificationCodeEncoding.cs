@@ -38,5 +38,14 @@ namespace HDVP.Internals
         /// </summary>
         [Pure]
         int DecodeSingleSymbol(char symbol);
+
+        /// <summary>
+        /// Returns an number of bytes required to produce an encoded string with
+        /// the length of <paramref name="expectedStringLength"/>. Note that the
+        /// number of bytes can be an approximation - i.e. it may be greater than
+        /// the smallest possible number.
+        /// </summary>
+        [Pure]
+        int GetRequiredByteCount(int expectedStringLength);
     }
 }
