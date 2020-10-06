@@ -3,7 +3,7 @@
   <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Code.props', '$(MSBuildThisFileDirectory)'))" />
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <!--
@@ -15,4 +15,10 @@
     <Description>The human data verification protocol.</Description>
     <Authors>Sebastian Krysmanski</Authors>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AppMotor.Core" Version="0.5.2" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+  </ItemGroup>
+
 </Project>
