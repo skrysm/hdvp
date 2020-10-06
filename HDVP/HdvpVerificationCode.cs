@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
 using AppMotor.Core.Utils;
+
+using HDVP.Internals;
 
 using JetBrains.Annotations;
 
@@ -11,20 +12,19 @@ namespace HDVP
 {
     public sealed class HdvpVerificationCode
     {
-        private const string ZBASE32_SYMBOLS = "ybndrfg8ejkmcpqxot1uwisza345h769";
-
-        private static readonly Base32Encoding ZBASE32_ENCODING = new Base32Encoding(ZBASE32_SYMBOLS, paddingChar: null);
-
-        private static readonly Dictionary<char, byte> ZBASE32_INVERSE_SYMBOLS = Rfc4648Encoding.CreateInverseSymbolsDictionary(ZBASE32_SYMBOLS);
-
-        [PublicAPI]
-        public static readonly int SALT_LENGTH = 32;
+        /// <summary>
+        /// The text encoding used for verification codes.
+        /// </summary>
+        private static IVerificationCodeEncoding CodeEncoding { get; } = new ZBase32VerificationCodeEncoding();
 
         [PublicAPI]
-        public static readonly int MIN_CODE_LENGTH = 9;
+        public static int SaltLength => 32;
 
         [PublicAPI]
-        public static readonly int MAX_CODE_LENGTH = 9 + ZBASE32_SYMBOLS.Length;
+        public static int MinCodeLength => 9;
+
+        [PublicAPI]
+        public static int MaxCodeLength { get; } = MinCodeLength + CodeEncoding.AvailableSymbolCount;
 
         /// <summary>
         /// The verification code itself.
@@ -60,19 +60,19 @@ namespace HDVP
         {
             Validate.Argument.IsNotNull(data, nameof(data));
 
-            if (salt.Length != SALT_LENGTH)
+            if (salt.Length != SaltLength)
             {
-                throw new ArgumentException($"The provided salt is not {SALT_LENGTH} bytes long.", nameof(salt));
+                throw new ArgumentException($"The provided salt is not {SaltLength} bytes long.", nameof(salt));
             }
 
-            if (codeLength < MIN_CODE_LENGTH || codeLength > MAX_CODE_LENGTH)
+            if (codeLength < MinCodeLength || codeLength > MaxCodeLength)
             {
-                throw new ArgumentException($"The code length must be at least {MIN_CODE_LENGTH} and at most {MAX_CODE_LENGTH}.");
+                throw new ArgumentException($"The code length must be at least {MinCodeLength} and at most {MaxCodeLength}.");
             }
 
             var slowHash = GetSlowHash(data, salt, codeLength);
 
-            var zBase32String = ConvertToZBase32(slowHash);
+            var zBase32String = CodeEncoding.EncodeBytes(slowHash);
 
             var verificationCode = EncodeLength(codeLength) + zBase32String.Substring(0, codeLength - 1);
 
@@ -87,15 +87,9 @@ namespace HDVP
         }
 
         [MustUseReturnValue]
-        private static string ConvertToZBase32(byte[] hash)
-        {
-            return ZBASE32_ENCODING.Encode(hash);
-        }
-
-        [MustUseReturnValue]
         private static char EncodeLength(int codeLength)
         {
-            return ZBASE32_SYMBOLS[codeLength - MIN_CODE_LENGTH];
+            return CodeEncoding.EncodeSingleValue(codeLength - MinCodeLength);
         }
 
         [PublicAPI, Pure]
@@ -111,21 +105,21 @@ namespace HDVP
         {
             Validate.Argument.IsNotNull(verificationCode, nameof(verificationCode));
 
-            if (verificationCode.Length < MIN_CODE_LENGTH || verificationCode.Length > MAX_CODE_LENGTH)
+            if (verificationCode.Length < MinCodeLength || verificationCode.Length > MaxCodeLength)
             {
                 return HdvpFormatValidationResults.InvalidLength;
             }
 
             foreach (var ch in verificationCode)
             {
-                if (!ZBASE32_INVERSE_SYMBOLS.ContainsKey(ch))
+                if (!CodeEncoding.IsValidSymbol(ch))
                 {
                     return HdvpFormatValidationResults.InvalidSymbols;
                 }
             }
 
             var lengthChar = verificationCode[0];
-            var expectedLength = ZBASE32_INVERSE_SYMBOLS[lengthChar] + MIN_CODE_LENGTH;
+            var expectedLength = CodeEncoding.DecodeSingleSymbol(lengthChar) + MinCodeLength;
 
             if (verificationCode.Length != expectedLength)
             {

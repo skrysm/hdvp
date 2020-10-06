@@ -60,7 +60,7 @@ namespace HDVP
         {
             using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
 
-            var salt = new byte[HdvpVerificationCode.SALT_LENGTH];
+            var salt = new byte[HdvpVerificationCode.SaltLength];
             rngCryptoServiceProvider.GetBytes(salt);
 
             return salt.ToImmutableArray();

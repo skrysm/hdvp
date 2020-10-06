@@ -2,7 +2,7 @@
 
 using JetBrains.Annotations;
 
-namespace HDVP
+namespace HDVP.Internals
 {
     internal static class HdvpSlowHashAlgorithm
     {
