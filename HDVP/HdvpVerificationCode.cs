@@ -47,9 +47,10 @@ namespace HDVP
         [PublicAPI, MustUseReturnValue]
         public static HdvpVerificationCode Create(string verificationCode, ImmutableArray<byte> salt)
         {
-            if (CheckFormat(verificationCode) != HdvpFormatValidationResults.Valid)
+            var validationResult = CheckFormat(verificationCode);
+            if (validationResult != HdvpFormatValidationResults.Valid)
             {
-                throw new ArgumentException("The verification code has a bad format.", nameof(verificationCode));
+                throw new ArgumentException($"The verification code has a bad format. ({validationResult})", nameof(verificationCode));
             }
 
             return new HdvpVerificationCode(verificationCode, salt);

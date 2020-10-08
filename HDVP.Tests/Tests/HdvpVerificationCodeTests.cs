@@ -64,6 +64,42 @@ namespace HDVP.Tests
             verificationCode2.Code.Length.ShouldBe(HdvpVerificationCode.MaxCodeLength);
         }
 
+        [Fact]
+        public void TestWrongCodeLengthDetection()
+        {
+            // Setup
+            var data = CreateVerifiableData();
+            var salt = CreateNonRandomSalt();
+
+            // Setup 1
+            var verificationCode1 = HdvpVerificationCode.Create(data, salt, codeLength: 12);
+
+            // Test 1
+            var shortenedCode1 = verificationCode1.Code.Substring(0, verificationCode1.Code.Length - 1);
+            HdvpVerificationCode.CheckFormat(shortenedCode1).ShouldBe(HdvpFormatValidationResults.InvalidLength);
+            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(shortenedCode1, salt));
+
+            var longerCode1 = verificationCode1.Code + "a";
+            HdvpVerificationCode.CheckFormat(longerCode1).ShouldBe(HdvpFormatValidationResults.InvalidLength);
+            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(longerCode1, salt));
+
+            // Setup 2
+            var verificationCode2 = HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCode.MinCodeLength);
+
+            // Test 2
+            var shortenedCode2 = verificationCode2.Code.Substring(0, verificationCode2.Code.Length - 1);
+            HdvpVerificationCode.CheckFormat(shortenedCode2).ShouldBe(HdvpFormatValidationResults.InvalidLength);
+            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(shortenedCode2, salt));
+
+            // Setup 3
+            var verificationCode3 = HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCode.MaxCodeLength);
+
+            // Test 3
+            var longerCode2 = verificationCode3.Code + "a";
+            HdvpVerificationCode.CheckFormat(longerCode2).ShouldBe(HdvpFormatValidationResults.InvalidLength);
+            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(longerCode2, salt));
+        }
+
         [MustUseReturnValue]
         private static HdvpVerifiableData CreateVerifiableData()
         {
