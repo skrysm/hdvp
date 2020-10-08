@@ -24,7 +24,7 @@ namespace HDVP
         public static int MinCodeLength => 9;
 
         [PublicAPI]
-        public static int MaxCodeLength { get; } = MinCodeLength + CodeEncoding.AvailableSymbolCount;
+        public static int MaxCodeLength { get; } = MinCodeLength + CodeEncoding.AvailableSymbolCount - 1;
 
         /// <summary>
         /// The verification code itself.
