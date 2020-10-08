@@ -55,8 +55,8 @@ namespace HDVP
             return new HdvpVerificationCode(verificationCode, salt);
         }
 
-        [PublicAPI, MustUseReturnValue]
-        public static HdvpVerificationCode Create(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
+        [MustUseReturnValue]
+        internal static HdvpVerificationCode Create(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
         {
             Validate.Argument.IsNotNull(data, nameof(data));
 

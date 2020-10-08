@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Tests.props', '$(MSBuildThisFileDirectory)'))" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <RootNamespace>HDVP</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HDVP\HDVP.csproj" />
+  </ItemGroup>
+
+</Project>
