@@ -12,7 +12,7 @@ namespace HDVP.Internals
             const int ITERATIONS = 1000;
 
             // TODO: Replace with something more secure (i.e. more slow)
-            using DeriveBytes slowHash = new Rfc2898DeriveBytes(data, salt, ITERATIONS);
+            using DeriveBytes slowHash = new Rfc2898DeriveBytes(data, salt, ITERATIONS, HashAlgorithmName.SHA512);
 
             return slowHash.GetBytes(byteCount);
         }
