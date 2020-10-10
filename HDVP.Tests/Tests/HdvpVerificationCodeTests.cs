@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Immutable;
-using System.Text;
 
-using JetBrains.Annotations;
+using HDVP.TestUtils;
 
 using Shouldly;
 
@@ -18,9 +17,9 @@ namespace HDVP.Tests
             // Setup
             const int CODE_LENGTH = 12;
 
-            var data = CreateVerifiableData();
+            var data = TestDataProvider.CreateVerifiableData();
 
-            var salt = CreateNonRandomSalt();
+            var salt = TestDataProvider.CreateNonRandomSalt();
 
             // Test 1
             var verificationCode1 = HdvpVerificationCode.Create(data, salt, codeLength: CODE_LENGTH);
@@ -40,7 +39,7 @@ namespace HDVP.Tests
         [Fact]
         public void TestSaltLength()
         {
-            var data = CreateVerifiableData();
+            var data = TestDataProvider.CreateVerifiableData();
 
             HdvpVerificationCode.SaltLength.ShouldBe(32);
 
@@ -51,8 +50,8 @@ namespace HDVP.Tests
         [Fact]
         public void TestCodeLength()
         {
-            var data = CreateVerifiableData();
-            var salt = CreateNonRandomSalt();
+            var data = TestDataProvider.CreateVerifiableData();
+            var salt = TestDataProvider.CreateNonRandomSalt();
 
             Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCode.MinCodeLength - 1));
             Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCode.MaxCodeLength + 1));
@@ -68,8 +67,8 @@ namespace HDVP.Tests
         public void TestWrongCodeLengthDetection()
         {
             // Setup
-            var data = CreateVerifiableData();
-            var salt = CreateNonRandomSalt();
+            var data = TestDataProvider.CreateVerifiableData();
+            var salt = TestDataProvider.CreateNonRandomSalt();
 
             // Setup 1
             var verificationCode1 = HdvpVerificationCode.Create(data, salt, codeLength: 12);
@@ -98,23 +97,6 @@ namespace HDVP.Tests
             var longerCode2 = verificationCode3.Code + "a";
             HdvpVerificationCode.CheckFormat(longerCode2).ShouldBe(HdvpFormatValidationResults.InvalidLength);
             Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(longerCode2, salt));
-        }
-
-        [MustUseReturnValue]
-        private static HdvpVerifiableData CreateVerifiableData()
-        {
-            var dataBytes = Encoding.UTF8.GetBytes(
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. " +
-                "At vero eos et accusam et justo duo dolores et ea rebum."
-            );
-
-            return HdvpVerifiableData.ReadFromMemory(dataBytes);
-        }
-
-        [MustUseReturnValue]
-        private static ImmutableArray<byte> CreateNonRandomSalt()
-        {
-            return ImmutableArray.Create(Encoding.ASCII.GetBytes("Stet clita kasd gubergren, no se"));
         }
     }
 }
