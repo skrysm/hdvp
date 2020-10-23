@@ -1,5 +1,12 @@
-# Editor configuration
+#################################################################################
+#
+# Editor Configurations
+#
 # For details, see: https://editorconfig.org/#file-format-details
+#
+# For Visual Studio additions, see: https://aka.ms/editorconfigdocs
+#
+#################################################################################
 
 root = true
 
@@ -31,6 +38,13 @@ indent_size = 4
 
 
 #
+# Windows batch files
+#
+[*.{bat,cmd}]
+end_of_line = crlf
+
+
+#
 # C# files
 #
 [*.cs]
@@ -49,6 +63,46 @@ dotnet_style_qualification_for_method = false:suggestion
 dotnet_style_qualification_for_event = true:suggestion
 
 dotnet_sort_system_directives_first = true:suggestion
+dotnet_separate_import_directive_groups = true:suggestion
+
+#
+# Code analysis rules
+#
+# For each rule, see: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/quality-rules/caXXXX
+#
+# The FxCop project: https://github.com/dotnet/roslyn-analyzers
+#
+# TODO: This section can be moved to a central place once https://github.com/dotnet/roslyn/issues/47707 is implemented
+#
+
+# CA1031: Do not catch general exception types
+# Reason: There are lots of places (especially in reusable library code) that make catching "Exception"
+#   necessary/useful. In my experience with this rule, it's suppressed 99% of the time - making it more of
+#   an annoyance than a helpful rule.
+dotnet_diagnostic.CA1031.severity = none
+
+# CA1032: Implement standard exception constructors
+# Reason: This rule does not provide any real benefit but on the other hand limits the code design unnecessarily.
+dotnet_diagnostic.CA1032.severity = none
+
+# CA1040: Avoid empty interfaces
+# Reason: This rule does not provide any real benefit but on the other hand limits the code design unnecessarily.
+dotnet_diagnostic.CA1040.severity = none
+
+# CA1707: Identifiers should not contain underscores
+# Reason: Our style guide uses underscores for constants.
+dotnet_diagnostic.CA1707.severity = none
+
+# CA1717: Only FlagsAttribute enums should have plural names
+# Reason: That's a matter of preference. On the other hand, allowing plural enum name resolves name conflicts if
+#   the enum is a nested enum and there's a property for that enum in the outer class.
+dotnet_diagnostic.CA1717.severity = none
+
+# CA2225: Operator overloads have named alternates
+# Reason: This rule is "nice" but makes writing operators more cumbersome. The primary reason for this rule
+#   is "It's provided for developers who program in languages that do not support overloaded operators." but
+#   we don't really care about these language (whatever they are).
+dotnet_diagnostic.CA2225.severity = none
 
 
 #

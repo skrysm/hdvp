@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Code.props', '$(MSBuildThisFileDirectory)'))" />
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
+    <Version>0.5.0</Version>
+  </PropertyGroup>
+
+  <!--
+    NuGet (and assembly) properties
+    See 'Project.Code.props' for more details.
+  -->
+  <PropertyGroup>
+    <PackageId>HDVP</PackageId>
+    <Description>The human data verification protocol.</Description>
+    <Authors>Sebastian Krysmanski</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AppMotor.Core" Version="0.5.3" />
+    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.7.1" />
+  </ItemGroup>
+
+</Project>
