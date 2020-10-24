@@ -15,7 +15,6 @@
 #endregion
 
 using System;
-using System.Collections.Immutable;
 
 using AppMotor.Core.Utils;
 
@@ -33,9 +32,6 @@ namespace HDVP
         private static IVerificationCodeEncoding CodeEncoding { get; } = new ZBase32VerificationCodeEncoding();
 
         [PublicAPI]
-        public static int SaltLength => 32;
-
-        [PublicAPI]
         public static int MinCodeLength => 9;
 
         [PublicAPI]
@@ -51,16 +47,16 @@ namespace HDVP
         /// The salt being used to create this verification code.
         /// </summary>
         [PublicAPI]
-        public ImmutableArray<byte> Salt { get; }
+        public HdvpSalt Salt { get; }
 
-        private HdvpVerificationCode(string code, ImmutableArray<byte> salt)
+        private HdvpVerificationCode(string code, HdvpSalt salt)
         {
             this.Code = code;
             this.Salt = salt;
         }
 
         [PublicAPI, MustUseReturnValue]
-        public static HdvpVerificationCode Create(string verificationCode, ImmutableArray<byte> salt)
+        public static HdvpVerificationCode Create(string verificationCode, HdvpSalt salt)
         {
             var validationResult = CheckFormat(verificationCode);
             if (validationResult != HdvpFormatValidationResults.Valid)
@@ -72,14 +68,9 @@ namespace HDVP
         }
 
         [MustUseReturnValue]
-        internal static HdvpVerificationCode Create(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
+        internal static HdvpVerificationCode Create(HdvpVerifiableData data, HdvpSalt salt, int codeLength)
         {
             Validate.Argument.IsNotNull(data, nameof(data));
-
-            if (salt.Length != SaltLength)
-            {
-                throw new ArgumentException($"The provided salt is not {SaltLength} bytes long.", nameof(salt));
-            }
 
             if (codeLength < MinCodeLength || codeLength > MaxCodeLength)
             {
@@ -96,7 +87,7 @@ namespace HDVP
         }
 
         [MustUseReturnValue]
-        private static byte[] GetSlowHash(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
+        private static byte[] GetSlowHash(HdvpVerifiableData data, HdvpSalt salt, int codeLength)
         {
             int byteCount = CodeEncoding.GetRequiredByteCount(codeLength);
             return HdvpSlowHashAlgorithm.CreateHash(data.Hash, salt, byteCount: byteCount);

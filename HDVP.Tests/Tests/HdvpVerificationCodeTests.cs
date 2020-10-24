@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Immutable;
 
 using HDVP.TestUtils;
 
@@ -34,17 +33,6 @@ namespace HDVP.Tests
             verificationCode2.Salt.ShouldBe(salt);
 
             verificationCode2.IsMatch(data).ShouldBe(true);
-        }
-
-        [Fact]
-        public void TestSaltLength()
-        {
-            var data = TestDataProvider.CreateVerifiableData();
-
-            HdvpVerificationCode.SaltLength.ShouldBe(32);
-
-            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(data, ImmutableArray.Create(new byte[HdvpVerificationCode.SaltLength - 1]), codeLength: HdvpVerificationCode.MinCodeLength));
-            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(data, ImmutableArray.Create(new byte[HdvpVerificationCode.SaltLength + 1]), codeLength: HdvpVerificationCode.MinCodeLength));
         }
 
         [Fact]

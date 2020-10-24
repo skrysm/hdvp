@@ -76,22 +76,11 @@ namespace HDVP
                 return this.m_currentVerificationCode;
             }
 
-            var salt = CreateSalt();
+            var salt = HdvpSalt.CreateNewSalt();
             this.m_currentVerificationCode = HdvpVerificationCode.Create(this.m_data, salt, this.m_verificationCodeLength);
             this.VerificationCodeValidUntil = this.m_dateTimeProvider.UtcNow + this.m_verificationCodeTimeToLive;
 
             return this.m_currentVerificationCode;
-        }
-
-        [MustUseReturnValue]
-        private static ImmutableArray<byte> CreateSalt()
-        {
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
-
-            var salt = new byte[HdvpVerificationCode.SaltLength];
-            rngCryptoServiceProvider.GetBytes(salt);
-
-            return salt.ToImmutableArray();
         }
     }
 }

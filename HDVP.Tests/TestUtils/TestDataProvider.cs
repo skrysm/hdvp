@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using System.Text;
+﻿using System.Text;
 
 using JetBrains.Annotations;
 
@@ -19,9 +18,9 @@ namespace HDVP.TestUtils
         }
 
         [MustUseReturnValue]
-        public static ImmutableArray<byte> CreateNonRandomSalt()
+        public static HdvpSalt CreateNonRandomSalt()
         {
-            return ImmutableArray.Create(Encoding.ASCII.GetBytes("Stet clita kasd gubergren, no se"));
+            return new HdvpSalt(Encoding.ASCII.GetBytes("Stet clita kasd gubergren, no se"));
         }
     }
 }
