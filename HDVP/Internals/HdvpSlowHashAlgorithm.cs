@@ -14,6 +14,9 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Immutable;
+using System.Linq;
+
 using JetBrains.Annotations;
 
 using Konscious.Security.Cryptography;
@@ -23,11 +26,11 @@ namespace HDVP.Internals
     internal static class HdvpSlowHashAlgorithm
     {
         [MustUseReturnValue]
-        public static byte[] CreateHash(byte[] data, byte[] salt, int byteCount)
+        public static byte[] CreateHash(ImmutableArray<byte> data, ImmutableArray<byte> salt, int byteCount)
         {
-            using var argon2 = new Argon2id(data);
+            using var argon2 = new Argon2id(data.ToArray());
 
-            argon2.Salt = salt;
+            argon2.Salt = salt.ToArray();
             argon2.DegreeOfParallelism = 8; // 8 = max CPU usage on CPU with 4 cores and hyper threading
             argon2.MemorySize = 130; // MB
 

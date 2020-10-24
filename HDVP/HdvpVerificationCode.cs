@@ -16,7 +16,6 @@
 
 using System;
 using System.Collections.Immutable;
-using System.Linq;
 
 using AppMotor.Core.Utils;
 
@@ -100,7 +99,7 @@ namespace HDVP
         private static byte[] GetSlowHash(HdvpVerifiableData data, ImmutableArray<byte> salt, int codeLength)
         {
             int byteCount = CodeEncoding.GetRequiredByteCount(codeLength);
-            return HdvpSlowHashAlgorithm.CreateHash(data.Hash.ToArray(), salt.ToArray(), byteCount: byteCount);
+            return HdvpSlowHashAlgorithm.CreateHash(data.Hash, salt, byteCount: byteCount);
         }
 
         [MustUseReturnValue]
