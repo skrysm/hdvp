@@ -38,7 +38,7 @@ To generate a verification code, the following steps must be executed:
 1. Calculate the **SHA-512 hash** from `input_data`.
 1. Calculate the **required number of bytes for the Argon2 hash** based on `code_length - 1`.
 1. Calculate the **Argon2id hash** (byte count from the previous step) from the hash from step 1 and the salt.
-1. Encode the Argon2 hash with **z-base-32** (no padding) and truncate it to `code_length - 1`.
+1. Encode the Argon2 hash with **z-base-32** (no padding; all lower-case) and truncate it to `code_length - 1`.
 1. **Encode `code_length - min_code_length`** into a single z-base-32 character and prepend it to the verification code from the previous step.
 
 ### Verify a Verification Code
@@ -55,7 +55,7 @@ Then, the following steps must be executed:
 1. **Decode** the first character of the `verification_code` via z-base-32 and verify that the verification code is `decoded_length + min_code_length` characters long.
 1. Optionally verify that `verification_code` contains **only z-base-32 characters**.
 1. **Generate a verification code** from `received_data`, `received_salt`, and `decoded_length + min_code_length`
-1. **Compare** the generated verification code with `verification_code`.
+1. **Compare** the generated verification code with `verification_code` (case-insensitive).
 
 If the codes match, the `received_data` has not been modified in transit.
 
@@ -120,3 +120,5 @@ The following characters encode the values 0 to 31 in z-base-32:
 These are the English letters (a - z) and digits (0 - 9) without the letters `l` and `v`, and the digits `0` and `2`.
 
 The position in the string above defines which value is encoded with which character (e.g. 0 = y, 1 = b, 2 = n, ...)
+
+HDVP verification codes are always displayed in **lower-case** (for ease of use); verification of the code must be case-insensitive.
