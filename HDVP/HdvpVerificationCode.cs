@@ -34,6 +34,12 @@ namespace HDVP
         [PublicAPI]
         public static int MinCodeLength => 9;
 
+        /// <summary>
+        /// The maximum length (i.e. <c>Code.Length</c>) of a verification code (including length character).
+        /// </summary>
+        /// <remarks>
+        /// This length uses "- 1" because we need to encode the values "0..31" - not "1..32".
+        /// </remarks>
         [PublicAPI]
         public static int MaxCodeLength { get; } = MinCodeLength + CodeEncoding.AvailableSymbolCount - 1;
 
