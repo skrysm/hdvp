@@ -83,20 +83,15 @@ namespace HDVP
                 throw new ArgumentException($"The code length must be at least {MinCodeLength} and at most {MaxCodeLength}.");
             }
 
-            var slowHash = GetSlowHash(data, salt, codeLength);
+            int hashByteCount = CodeEncoding.GetRequiredByteCount(codeLength - 1);
+
+            var slowHash = HdvpSlowHashAlgorithm.CreateHash(data.Hash, salt, byteCount: hashByteCount);
 
             var zBase32String = CodeEncoding.EncodeBytes(slowHash);
 
             var verificationCode = EncodeLength(codeLength) + zBase32String.Substring(0, codeLength - 1);
 
             return new HdvpVerificationCode(verificationCode, salt);
-        }
-
-        [MustUseReturnValue]
-        private static byte[] GetSlowHash(HdvpVerifiableData data, HdvpSalt salt, int codeLength)
-        {
-            int byteCount = CodeEncoding.GetRequiredByteCount(codeLength);
-            return HdvpSlowHashAlgorithm.CreateHash(data.Hash, salt, byteCount: byteCount);
         }
 
         [MustUseReturnValue]
