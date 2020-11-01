@@ -14,17 +14,15 @@ namespace HDVP.Tests
         public void TestCreate()
         {
             // Setup
-            const int CODE_LENGTH = 12;
-
             var data = TestDataProvider.CreateVerifiableData();
 
             var salt = TestDataProvider.CreateNonRandomSalt();
 
             // Test 1
-            var verificationCode1 = HdvpVerificationCode.Create(data, salt, codeLength: CODE_LENGTH);
+            var verificationCode1 = HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
 
             // Verification
-            verificationCode1.Code.Length.ShouldBe(CODE_LENGTH);
+            verificationCode1.Code.Length.ShouldBe(HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
             verificationCode1.Salt.ShouldBe(salt);
 
             // Test 2
@@ -33,6 +31,25 @@ namespace HDVP.Tests
             verificationCode2.Salt.ShouldBe(salt);
 
             verificationCode2.IsMatch(data).ShouldBe(true);
+        }
+
+        /// <summary>
+        /// Verifies that having two different salts for the same binary data gives two different verification codes.
+        /// </summary>
+        [Fact]
+        public void TestDifferentSaltsGiveDifferentCodes()
+        {
+            // Setup
+            var data = TestDataProvider.CreateVerifiableData();
+
+            var salt1 = HdvpSalt.CreateNewSalt();
+            var verificationCode1 = HdvpVerificationCode.Create(data, salt1, HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
+
+            var salt2 = HdvpSalt.CreateNewSalt();
+            var verificationCode2 = HdvpVerificationCode.Create(data, salt2, HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
+
+            // Verification
+            verificationCode2.Code.ShouldNotBe(verificationCode1.Code);
         }
 
         [Fact]
