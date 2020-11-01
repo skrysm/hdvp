@@ -27,6 +27,12 @@ namespace HDVP
         [PublicAPI]
         public static readonly TimeSpan DEFAULT_TIME_TO_LIVE = TimeSpan.FromMinutes(1);
 
+        /// <summary>
+        /// The default verification code length.
+        /// </summary>
+        [PublicAPI]
+        public static readonly int DEFAULT_CODE_LENGTH = 12;
+
         [PublicAPI]
         public DateTime VerificationCodeValidUntil { get; private set; }
 
@@ -39,6 +45,14 @@ namespace HDVP
         private readonly TimeSpan m_verificationCodeTimeToLive;
 
         private readonly IDateTimeProvider m_dateTimeProvider;
+
+        public HdvpVerificationCodeProvider(
+                HdvpVerifiableData data,
+                IDateTimeProvider? dateTimeProvider = null
+            )
+                : this(data, verificationCodeLength: DEFAULT_CODE_LENGTH, DEFAULT_TIME_TO_LIVE, dateTimeProvider)
+        {
+        }
 
         public HdvpVerificationCodeProvider(
                 HdvpVerifiableData data,
