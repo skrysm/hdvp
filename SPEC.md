@@ -4,7 +4,7 @@ This file contains the HDVP specification.
 
 For reasoning behind the various parts, see the [design notes](README.md).
 
-You can find the reference implementation (in C#) in this repository.
+You can find the reference implementation (in C#) in the `impl` directory.
 
 **Specification Version:** 1.0
 
