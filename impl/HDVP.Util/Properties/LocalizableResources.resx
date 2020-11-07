@@ -117,7 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="HelpTextBenchmark" xml:space="preserve">
+  <data name="AppDescription" xml:space="preserve">
+    <value>HDVP utility</value>
+  </data>
+  <data name="Benchmark_CalculateFirstHash" xml:space="preserve">
+    <value>Calculating first slow hash...</value>
+  </data>
+  <data name="Benchmark_FirstHashResult" xml:space="preserve">
+    <value>Result:</value>
+  </data>
+  <data name="HelpText_Benchmark" xml:space="preserve">
     <value>Tests how many slow hashes can be calculated per second on this machine.</value>
+  </data>
+  <data name="HelpText_Benchmark_Seconds" xml:space="preserve">
+    <value>For how long to run this benchmark (in seconds)</value>
   </data>
 </root>

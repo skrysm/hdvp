@@ -61,11 +61,47 @@ namespace HDVP.Util.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to HDVP utility.
+        /// </summary>
+        internal static string AppDescription {
+            get {
+                return ResourceManager.GetString("AppDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculating first slow hash....
+        /// </summary>
+        internal static string Benchmark_CalculateFirstHash {
+            get {
+                return ResourceManager.GetString("Benchmark_CalculateFirstHash", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Result:.
+        /// </summary>
+        internal static string Benchmark_FirstHashResult {
+            get {
+                return ResourceManager.GetString("Benchmark_FirstHashResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tests how many slow hashes can be calculated per second on this machine..
         /// </summary>
-        internal static string HelpTextBenchmark {
+        internal static string HelpText_Benchmark {
             get {
-                return ResourceManager.GetString("HelpTextBenchmark", resourceCulture);
+                return ResourceManager.GetString("HelpText_Benchmark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to For how long to run this benchmark (in seconds).
+        /// </summary>
+        internal static string HelpText_Benchmark_Seconds {
+            get {
+                return ResourceManager.GetString("HelpText_Benchmark_Seconds", resourceCulture);
             }
         }
     }

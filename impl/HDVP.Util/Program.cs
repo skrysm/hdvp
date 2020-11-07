@@ -1,78 +1,74 @@
 ﻿using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.IO;
+using System.Text;
 
-using AppMotor.Core.Utils;
+using AppMotor.Core.System;
 
-using CommandLine;
-
+using HDVP.Internals;
 using HDVP.Util.Properties;
-
-using JetBrains.Annotations;
 
 namespace HDVP.Util
 {
     internal static class Program
     {
-        [Verb("benchmark", HelpText = "blaa")]
-        private sealed class BenchmarkOptions
-        {
-
-        }
-
         private static int Main(string[] args)
         {
-            // using var parser = new Parser(config =>
-            //     {
-            //         config.HelpWriter = Console.Out;
-            //         config.AutoHelp = true;
-            //     }
-            // );
-            // parser
-            //        .ParseArguments<BenchmarkOptions>(args)
-            //        .WithParsed(opts => RunBenchmark(opts))        ;
-            // Create a root command with some options
-            var rootCommand = new RootCommand
+            var benchmarkCommand = new Command("benchmark", LocalizableResources.HelpText_Benchmark)
             {
                 new Option<int>(
-                    "--int-option",
-                    getDefaultValue: () => 42,
-                    description: "An option whose argument is parsed as an int"
+                    new[] { "--seconds", "-s" },
+                    getDefaultValue: () => 10,
+                    description: LocalizableResources.HelpText_Benchmark_Seconds
                 ),
-                new Option<bool>(
-                    "--bool-option",
-                    "An option whose argument is parsed as a bool"),
-                new Option<FileInfo>(
-                    "--file-option",
-                    "An option whose argument is parsed as a FileInfo"
-                )
-                {
-                    IsRequired = true,
-                },
             };
+            benchmarkCommand.Handler = CommandHandler.Create<int>(RunBenchmark);
 
-            rootCommand.Description = "My sample app";
-
-            // Note that the parameters of the handler method are matched according to the names of the options
-            rootCommand.Handler = CommandHandler.Create<int, bool, FileInfo>((intOption, boolOption, fileOption) =>
+            var rootCommand = new RootCommand(LocalizableResources.AppDescription)
             {
-                Console.WriteLine($"The value for --int-option is: {intOption}");
-                Console.WriteLine($"The value for --bool-option is: {boolOption}");
-                Console.WriteLine($"The value for --file-option is: {fileOption?.FullName ?? "null"}");
-            });
+                benchmarkCommand,
+            };
 
             // Parse the incoming args and invoke the handler
             return rootCommand.Invoke(args);
         }
 
-        /*
-        private static int RunBenchmark([NotNull] BenchmarkOptions options)
+        private static int RunBenchmark(int seconds)
         {
-            Validate.Argument.IsNotNull(options, nameof(options));
+            if (seconds < 1)
+            {
+                throw new ArgumentException("Seconds must be greater than 1");
+            }
+
+            Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);
+            Terminal.WriteLine();
+
+            var salt = HdvpSalt.CreateNewSalt();
+            var verifiableData = HdvpVerifiableData.ReadFromMemory(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
+
+            var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: 8);
+
+            Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
+            Terminal.WriteLine();
+            Terminal.WriteLine();
+
+            Terminal.WriteLine($"Calculating hashes per second for the next {seconds} seconds...");
+
+            var testTime = TimeSpan.FromSeconds(seconds);
+            var startTime = DateTime.UtcNow;
+
+            int hashCount = 0;
+            while (DateTime.UtcNow - startTime < testTime)
+            {
+                // ReSharper disable once MustUseReturnValue
+                HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: 8);
+                hashCount++;
+            }
+
+            var timeSpent = DateTime.UtcNow - startTime;
+            Console.WriteLine($"Hashes per second: {hashCount / timeSpent.TotalSeconds:0.0}");
 
             return 0;
         }
-    */
     }
 }
