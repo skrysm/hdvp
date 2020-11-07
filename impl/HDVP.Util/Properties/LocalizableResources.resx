@@ -129,6 +129,9 @@
   <data name="HelpText_Benchmark" xml:space="preserve">
     <value>Tests how many slow hashes can be calculated per second on this machine.</value>
   </data>
+  <data name="HelpText_Benchmark_HashLength" xml:space="preserve">
+    <value>The number of bytes to calculate for each hash</value>
+  </data>
   <data name="HelpText_Benchmark_Seconds" xml:space="preserve">
     <value>For how long to run this benchmark (in seconds)</value>
   </data>

@@ -21,8 +21,13 @@ namespace HDVP.Util
                     getDefaultValue: () => 10,
                     description: LocalizableResources.HelpText_Benchmark_Seconds
                 ),
+                new Option<int>(
+                    new[] { "--hash-length", "-l" },
+                    getDefaultValue: () => 8,
+                    description: LocalizableResources.HelpText_Benchmark_HashLength
+                ),
             };
-            benchmarkCommand.Handler = CommandHandler.Create<int>(RunBenchmark);
+            benchmarkCommand.Handler = CommandHandler.Create<int, int>(RunBenchmark);
 
             var rootCommand = new RootCommand(LocalizableResources.AppDescription)
             {
@@ -33,7 +38,7 @@ namespace HDVP.Util
             return rootCommand.Invoke(args);
         }
 
-        private static int RunBenchmark(int seconds)
+        private static int RunBenchmark(int seconds, int hashLength)
         {
             if (seconds < 1)
             {
@@ -46,7 +51,7 @@ namespace HDVP.Util
             var salt = HdvpSalt.CreateNewSalt();
             var verifiableData = HdvpVerifiableData.ReadFromMemory(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
 
-            var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: 8);
+            var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: hashLength);
 
             Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
             Terminal.WriteLine();

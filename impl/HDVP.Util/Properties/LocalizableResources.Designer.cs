@@ -97,6 +97,15 @@ namespace HDVP.Util.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The number of bytes to calculate for each hash.
+        /// </summary>
+        internal static string HelpText_Benchmark_HashLength {
+            get {
+                return ResourceManager.GetString("HelpText_Benchmark_HashLength", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to For how long to run this benchmark (in seconds).
         /// </summary>
         internal static string HelpText_Benchmark_Seconds {
