@@ -14,7 +14,6 @@
 // limitations under the License.
 #endregion
 
-using System.Collections.Immutable;
 using System.Linq;
 
 using JetBrains.Annotations;
@@ -26,9 +25,9 @@ namespace HDVP.Internals
     internal static class HdvpSlowHashAlgorithm
     {
         [MustUseReturnValue]
-        public static byte[] CreateHash(ImmutableArray<byte> data, HdvpSalt salt, int byteCount)
+        public static byte[] CreateHash(HdvpVerifiableData data, HdvpSalt salt, int byteCount)
         {
-            using var argon2 = new Argon2id(data.ToArray());
+            using var argon2 = new Argon2id(data.Hash.ToArray());
 
             argon2.Salt = salt.Value.ToArray();
             argon2.DegreeOfParallelism = 8; // 8 = max CPU usage on CPU with 4 cores and hyper threading

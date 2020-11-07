@@ -87,7 +87,7 @@ namespace HDVP
             int hashByteCount = CodeEncoding.GetRequiredByteCount(codeLength - 1);
 
             // Calculate the slow hash
-            var slowHash = HdvpSlowHashAlgorithm.CreateHash(data.Hash, salt, byteCount: hashByteCount);
+            var slowHash = HdvpSlowHashAlgorithm.CreateHash(data, salt, byteCount: hashByteCount);
 
             // Convert the has to z-base-32
             var slowHashAsZBase32 = CodeEncoding.EncodeBytes(slowHash);
