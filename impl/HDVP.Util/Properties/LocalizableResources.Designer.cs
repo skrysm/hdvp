@@ -88,6 +88,24 @@ namespace HDVP.Util.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hashes per second: {0:0.0}.
+        /// </summary>
+        internal static string Benchmark_HashesPerSecondResult {
+            get {
+                return ResourceManager.GetString("Benchmark_HashesPerSecondResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculating hashes per second for the next {0} seconds....
+        /// </summary>
+        internal static string Benchmark_RunIntro {
+            get {
+                return ResourceManager.GetString("Benchmark_RunIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tests how many slow hashes can be calculated per second on this machine..
         /// </summary>
         internal static string HelpText_Benchmark {

@@ -126,6 +126,12 @@
   <data name="Benchmark_FirstHashResult" xml:space="preserve">
     <value>Result:</value>
   </data>
+  <data name="Benchmark_HashesPerSecondResult" xml:space="preserve">
+    <value>Hashes per second: {0:0.0}</value>
+  </data>
+  <data name="Benchmark_RunIntro" xml:space="preserve">
+    <value>Calculating hashes per second for the next {0} seconds...</value>
+  </data>
   <data name="HelpText_Benchmark" xml:space="preserve">
     <value>Tests how many slow hashes can be calculated per second on this machine.</value>
   </data>

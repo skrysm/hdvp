@@ -57,7 +57,7 @@ namespace HDVP.Util
             Terminal.WriteLine();
             Terminal.WriteLine();
 
-            Terminal.WriteLine($"Calculating hashes per second for the next {seconds} seconds...");
+            Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, seconds);
 
             var testTime = TimeSpan.FromSeconds(seconds);
             var startTime = DateTime.UtcNow;
@@ -71,7 +71,7 @@ namespace HDVP.Util
             }
 
             var timeSpent = DateTime.UtcNow - startTime;
-            Console.WriteLine($"Hashes per second: {hashCount / timeSpent.TotalSeconds:0.0}");
+            Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
 
             return 0;
         }
