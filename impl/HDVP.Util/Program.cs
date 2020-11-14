@@ -130,7 +130,8 @@ namespace HDVP.Util
             /// <inheritdoc />
             public Task<int> InvokeAsync(InvocationContext context)
             {
-                return CommandHandler.Create(() => this.m_benchmarkCommand.Execute(new CliValues(context.ParseResult))).InvokeAsync(context);
+                var retVal = this.m_benchmarkCommand.Execute(new CliValues(context.ParseResult));
+                return Task.FromResult(retVal);
             }
         }
     }
