@@ -4,6 +4,7 @@ using System.CommandLine.Builder;
 using System.CommandLine.Help;
 using System.CommandLine.Invocation;
 using System.Text;
+using System.Threading.Tasks;
 
 using AppMotor.Core.System;
 
@@ -102,6 +103,7 @@ namespace HDVP.Util
 
             rootCommand.AddCommand(benchmarkCommand.UnderlyingImplementation);
 
+            /*
             var parser = new CommandLineBuilder(rootCommand)
                           .UseDefaults()
                           .Build();
@@ -109,8 +111,27 @@ namespace HDVP.Util
             var parseResult = parser.Parse(args);
 
             benchmarkCommand.UnderlyingImplementation.Handler = CommandHandler.Create(() => benchmarkCommand.Execute(new CliValues(parseResult)));
+            */
+
+            benchmarkCommand.UnderlyingImplementation.Handler = new MyInvocationHandler(benchmarkCommand);
 
             return rootCommand.Invoke(args);
+        }
+
+        private sealed class MyInvocationHandler : ICommandHandler
+        {
+            private readonly BenchmarkCommand m_benchmarkCommand;
+
+            public MyInvocationHandler(BenchmarkCommand benchmarkCommand)
+            {
+                this.m_benchmarkCommand = benchmarkCommand;
+            }
+
+            /// <inheritdoc />
+            public Task<int> InvokeAsync(InvocationContext context)
+            {
+                return CommandHandler.Create(() => this.m_benchmarkCommand.Execute(new CliValues(context.ParseResult))).InvokeAsync(context);
+            }
         }
     }
 }
