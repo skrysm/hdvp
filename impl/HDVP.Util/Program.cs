@@ -108,21 +108,9 @@ namespace HDVP.Util
 
             var parseResult = parser.Parse(args);
 
-            if (parseResult.CommandResult.Command == benchmarkCommand.UnderlyingImplementation)
-            {
-                return benchmarkCommand.Execute(new CliValues(parseResult));
-            }
+            benchmarkCommand.UnderlyingImplementation.Handler = CommandHandler.Create(() => benchmarkCommand.Execute(new CliValues(parseResult)));
 
-            //var pipeline = new InvocationPipeline(parseResult);
-
-            //pipeline.Invoke();
-
-            return 1;
-        }
-
-        private static int RunBenchmark(int seconds, int hashLength)
-        {
-            return 0;
+            return rootCommand.Invoke(args);
         }
     }
 }
