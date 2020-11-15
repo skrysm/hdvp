@@ -100,7 +100,7 @@ namespace HDVP.Util.CliApp
 
             foreach (var cliParam in this.m_allParams)
             {
-                command.AddOption(cliParam.UnderlyingImplementation);
+                command.Add(cliParam.UnderlyingImplementation);
             }
 
             command.Handler = new CliCommandHandler(this);
