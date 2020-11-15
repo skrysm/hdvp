@@ -16,11 +16,18 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.CommandLine.Parsing;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using AppMotor.Core.Exceptions;
 using AppMotor.Core.Extensions;
+
+using JetBrains.Annotations;
 
 namespace HDVP.Util.CliApp
 {
@@ -37,6 +44,8 @@ namespace HDVP.Util.CliApp
 
         public virtual string? HelpText => null;
 
+        private ImmutableList<CliParam>? m_allParams;
+
         private readonly Lazy<Command> m_underlyingImplementation;
 
         internal Command UnderlyingImplementation => this.m_underlyingImplementation.Value;
@@ -46,15 +55,22 @@ namespace HDVP.Util.CliApp
             this.m_underlyingImplementation = new Lazy<Command>(ToUnderlyingImplementation);
         }
 
-        public abstract int Execute(CliValues args);
+        /// <summary>
+        /// Runs this command.
+        /// </summary>
+        /// <returns>The exit code for the running program.</returns>
+        [PublicAPI]
+        public abstract int Execute();
 
-        private Command ToUnderlyingImplementation()
+        /// <summary>
+        /// Returns all parameters defined for this command. The default implementation uses reflection to find all properties
+        /// of type <see cref="CliParam"/>. Inheritors may override this method either to filter its result or completely change
+        /// the way the parameters are found.
+        /// </summary>
+        [PublicAPI]
+        protected virtual IEnumerable<CliParam> GetAllParams()
         {
-            var command = new Command(this.Name, this.HelpText);
-
-            var thisType = GetType();
-
-            foreach (var propertyInfo in thisType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
+            foreach (var propertyInfo in GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (!propertyInfo.PropertyType.Is<CliParam>())
                 {
@@ -72,10 +88,57 @@ namespace HDVP.Util.CliApp
                     continue;
                 }
 
+                yield return cliParam;
+            }
+        }
+
+        private Command ToUnderlyingImplementation()
+        {
+            this.m_allParams = GetAllParams().ToImmutableList();
+
+            var command = new Command(this.Name, this.HelpText);
+
+            foreach (var cliParam in this.m_allParams)
+            {
                 command.AddOption(cliParam.UnderlyingImplementation);
             }
 
+            command.Handler = new CliCommandHandler(this);
+
             return command;
+        }
+
+        private void SetAllParamValues(ParseResult parseResult)
+        {
+            if (this.m_allParams == null)
+            {
+                throw new UnexpectedBehaviorException("Can't set param values.");
+            }
+
+            foreach (var cliParam in this.m_allParams)
+            {
+                cliParam.SetValueFromParseResult(parseResult);
+            }
+        }
+
+        private sealed class CliCommandHandler : ICommandHandler
+        {
+            private readonly CliCommand m_command;
+
+            public CliCommandHandler(CliCommand command)
+            {
+                this.m_command = command;
+            }
+
+            /// <inheritdoc />
+            public Task<int> InvokeAsync(InvocationContext context)
+            {
+                this.m_command.SetAllParamValues(context.ParseResult);
+
+                int retVal = this.m_command.Execute();
+
+                return Task.FromResult(retVal);
+            }
         }
     }
 

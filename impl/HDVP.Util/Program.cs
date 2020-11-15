@@ -36,9 +36,9 @@ namespace HDVP.Util
                 };
 
             /// <inheritdoc />
-            public override int Execute(CliValues args)
+            public override int Execute()
             {
-                if (args.GetValue(this.Seconds) < 1)
+                if (this.Seconds.Value < 1)
                 {
                     throw new ArgumentException("Seconds must be greater than 1");
                 }
@@ -49,22 +49,22 @@ namespace HDVP.Util
                 var salt = HdvpSalt.CreateNewSalt();
                 var verifiableData = HdvpVerifiableData.ReadFromMemory(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
 
-                var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: args.GetValue(this.HashLength));
+                var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
 
                 Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
                 Terminal.WriteLine();
                 Terminal.WriteLine();
 
-                Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, args.GetValue(this.Seconds));
+                Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, this.Seconds.Value);
 
-                var testTime = TimeSpan.FromSeconds(args.GetValue(this.Seconds));
+                var testTime = TimeSpan.FromSeconds(this.Seconds.Value);
                 var startTime = DateTime.UtcNow;
 
                 int hashCount = 0;
                 while (DateTime.UtcNow - startTime < testTime)
                 {
                     // ReSharper disable once MustUseReturnValue
-                    HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: args.GetValue(this.HashLength));
+                    HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
                     hashCount++;
                 }
 
@@ -113,12 +113,12 @@ namespace HDVP.Util
             benchmarkCommand.UnderlyingImplementation.Handler = CommandHandler.Create(() => benchmarkCommand.Execute(new CliValues(parseResult)));
             */
 
-            benchmarkCommand.UnderlyingImplementation.Handler = new MyInvocationHandler(benchmarkCommand);
+            //benchmarkCommand.UnderlyingImplementation.Handler = new MyInvocationHandler(benchmarkCommand);
 
             return rootCommand.Invoke(args);
         }
 
-        private sealed class MyInvocationHandler : ICommandHandler
+        /*private sealed class MyInvocationHandler : ICommandHandler
         {
             private readonly BenchmarkCommand m_benchmarkCommand;
 
@@ -133,6 +133,6 @@ namespace HDVP.Util
                 var retVal = this.m_benchmarkCommand.Execute(new CliValues(context.ParseResult));
                 return Task.FromResult(retVal);
             }
-        }
+        }*/
     }
 }

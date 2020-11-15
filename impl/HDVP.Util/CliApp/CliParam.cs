@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.CommandLine;
+using System.CommandLine.Parsing;
 using System.Linq;
 
 using AppMotor.Core.Utils;
@@ -29,6 +30,8 @@ namespace HDVP.Util.CliApp
     public abstract class CliParam
     {
         internal abstract Option UnderlyingImplementation { get; }
+
+        internal abstract void SetValueFromParseResult(ParseResult parseResult);
     }
 
     public class CliParam<T> : CliParam where T : notnull
@@ -60,7 +63,7 @@ namespace HDVP.Util.CliApp
         /// <inheritdoc />
         internal override Option UnderlyingImplementation => this.m_underlyingImplementation.Value;
 
-        /*/// <summary>
+        /// <summary>
         /// The value of this parameter. Only set if <see cref="CliCommand.Execute"/> of the containing class is executed.
         /// </summary>
         public T Value
@@ -85,7 +88,7 @@ namespace HDVP.Util.CliApp
 
         private T? m_value;
 
-        private bool m_hasValueBeenSet;*/
+        private bool m_hasValueBeenSet;
 
         public CliParam(string primaryName, params string[] aliases)
         {
@@ -94,11 +97,21 @@ namespace HDVP.Util.CliApp
             this.m_underlyingImplementation = new Lazy<Option>(ToUnderlyingImplementation);
         }
 
-        /*internal void SetValue(T value)
+        internal override void SetValueFromParseResult(ParseResult parseResult)
         {
-            this.m_value = value;
+            OptionResult? result = parseResult.FindResultFor(this.UnderlyingImplementation);
+
+            if (result is null)
+            {
+                this.m_value = this.DefaultValue;
+            }
+            else
+            {
+                this.m_value = result.GetValueOrDefault<T>()!;
+            }
+
             this.m_hasValueBeenSet = true;
-        }*/
+        }
 
         private Option ToUnderlyingImplementation()
         {
