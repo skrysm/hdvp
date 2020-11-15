@@ -18,6 +18,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="AppMotor.CliApp">
+      <HintPath>..\..\..\AppMotor\AppMotor.CliApp\bin\Debug\net5.0\AppMotor.CliApp.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Update="Properties\LocalizableResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
