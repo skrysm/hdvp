@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 using AppMotor.CliApp;
 
@@ -17,9 +18,9 @@ namespace HDVP.Util
             yield return new BenchmarkCommand();
         }
 
-        private static int Main(string[] args)
+        private static Task<int> Main(string[] args)
         {
-            return Run<Program>(args);
+            return Execute<Program>(args);
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿#region License
 
 // Copyright 2020 HDVP (https://github.com/skrysmanski/hdvp)
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,7 @@
 
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 using AppMotor.CliApp;
 using AppMotor.Core.System;
@@ -47,7 +48,7 @@ namespace HDVP.Util
             };
 
         /// <inheritdoc />
-        public override int Execute()
+        public override Task<int> Execute()
         {
             if (this.Seconds.Value < 1)
             {
@@ -82,7 +83,7 @@ namespace HDVP.Util
             var timeSpent = DateTime.UtcNow - startTime;
             Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
 
-            return 0;
+            return Task.FromResult(0);
         }
     }
 }
