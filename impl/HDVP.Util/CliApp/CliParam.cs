@@ -106,7 +106,8 @@ namespace HDVP.Util.CliApp
         internal override Symbol UnderlyingImplementation => this.m_underlyingImplementation.Value;
 
         /// <summary>
-        /// The value of this parameter. Only set if <see cref="CliCommand.Execute"/> of the containing class is executed.
+        /// The value of this parameter. Important: Only available from within <see cref="CliCommand.Execute"/> of
+        /// the class that defines this parameter.
         /// </summary>
         public T Value
         {
