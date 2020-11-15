@@ -48,7 +48,9 @@ namespace HDVP.Util
             };
 
         /// <inheritdoc />
-        public override Task<int> Execute()
+        protected override CliCommandExecutor CommandExecutor => new CliCommandExecutor(Execute);
+
+        private void Execute()
         {
             if (this.Seconds.Value < 1)
             {
@@ -82,8 +84,6 @@ namespace HDVP.Util
 
             var timeSpent = DateTime.UtcNow - startTime;
             Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
-
-            return Task.FromResult(0);
         }
     }
 }
