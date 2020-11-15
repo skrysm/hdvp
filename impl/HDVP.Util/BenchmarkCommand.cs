@@ -48,7 +48,7 @@ namespace HDVP.Util
             };
 
         /// <inheritdoc />
-        protected override CliCommandExecutor CommandExecutor => new CliCommandExecutor(Execute);
+        protected override CliCommandExecutor Executor => new CliCommandExecutor(Execute);
 
         private void Execute()
         {

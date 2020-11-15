@@ -20,7 +20,7 @@ namespace HDVP.Util
 
         private static int Main(string[] args)
         {
-            return Execute<Program>(args);
+            return Run<Program>(args);
         }
     }
 }
