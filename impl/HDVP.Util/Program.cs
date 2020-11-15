@@ -18,7 +18,7 @@ namespace HDVP.Util
             yield return new BenchmarkCommand();
         }
 
-        private static Task<int> Main(string[] args)
+        private static int Main(string[] args)
         {
             return Execute<Program>(args);
         }
