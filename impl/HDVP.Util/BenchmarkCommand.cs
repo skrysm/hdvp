@@ -18,7 +18,6 @@
 
 using System;
 using System.Text;
-using System.Threading.Tasks;
 
 using AppMotor.CliApp;
 using AppMotor.Core.System;
@@ -33,22 +32,20 @@ namespace HDVP.Util
         /// <inheritdoc />
         public override string Name => "benchmark";
 
-        private CliParam<int> Seconds { get; } =
-            new CliParam<int>("--seconds", "-s")
-            {
-                HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
-                DefaultValue = 10,
-            };
+        private CliParam<int> Seconds { get; } = new("--seconds", "-s")
+        {
+            HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
+            DefaultValue = 10,
+        };
 
-        private CliParam<int> HashLength { get; } =
-            new CliParam<int>("--hash-length", "-l")
-            {
-                HelpText = LocalizableResources.HelpText_Benchmark_HashLength,
-                DefaultValue = 8,
-            };
+        private CliParam<int> HashLength { get; } = new("--hash-length", "-l")
+        {
+            HelpText = LocalizableResources.HelpText_Benchmark_HashLength,
+            DefaultValue = 8,
+        };
 
         /// <inheritdoc />
-        protected override CliCommandExecutor Executor => new CliCommandExecutor(Execute);
+        protected override CliCommandExecutor Executor => new(Execute);
 
         private void Execute()
         {
