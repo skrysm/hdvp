@@ -123,6 +123,9 @@
   <data name="Benchmark_CalculateFirstHash" xml:space="preserve">
     <value>Calculating first slow hash...</value>
   </data>
+  <data name="Benchmark_Error_TooFewSeconds" xml:space="preserve">
+    <value>ERROR: "--seconds" must be at least 1.</value>
+  </data>
   <data name="Benchmark_FirstHashResult" xml:space="preserve">
     <value>Result:</value>
   </data>

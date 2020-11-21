@@ -20,6 +20,7 @@ using System;
 using System.Text;
 
 using AppMotor.CliApp;
+using AppMotor.Core.Exceptions;
 using AppMotor.Core.System;
 
 using HDVP.Internals;
@@ -51,7 +52,7 @@ namespace HDVP.Util
         {
             if (this.Seconds.Value < 1)
             {
-                throw new ArgumentException("Seconds must be greater than 1");
+                throw new ErrorMessageException(LocalizableResources.Benchmark_Error_TooFewSeconds);
             }
 
             Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);

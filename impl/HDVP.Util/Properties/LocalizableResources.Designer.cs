@@ -79,6 +79,15 @@ namespace HDVP.Util.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ERROR: &quot;--seconds&quot; must be at least 1..
+        /// </summary>
+        internal static string Benchmark_Error_TooFewSeconds {
+            get {
+                return ResourceManager.GetString("Benchmark_Error_TooFewSeconds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result:.
         /// </summary>
         internal static string Benchmark_FirstHashResult {
