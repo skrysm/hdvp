@@ -30,9 +30,6 @@ namespace HDVP.Util
 {
     internal sealed class BenchmarkCommand : CliCommand
     {
-        /// <inheritdoc />
-        public override string Name => "benchmark";
-
         private CliParam<int> Seconds { get; } = new("--seconds", "-s")
         {
             HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
@@ -47,6 +44,10 @@ namespace HDVP.Util
 
         /// <inheritdoc />
         protected override CliCommandExecutor Executor => new(Execute);
+
+        public BenchmarkCommand() : base("benchmark")
+        {
+        }
 
         private void Execute()
         {
