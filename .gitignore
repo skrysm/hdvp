@@ -3,5 +3,6 @@
 **/bin/Release/
 **/obj/
 *.user
+launchSettings.json
 _ReSharper.Caches/
 *.nupkg
