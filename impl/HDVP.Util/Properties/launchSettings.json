@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "HDVP.Util": {
-      "commandName": "Project",
-      "commandLineArgs": "benchmark -l 42 --seconds 4"
-    }
-  }
-}
