@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 
-using AppMotor.CliApp;
-using AppMotor.CliApp.Parameters;
+using AppMotor.CliApp.CommandLine;
 
 using HDVP.Util.Properties;
 

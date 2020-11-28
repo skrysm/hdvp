@@ -19,9 +19,9 @@
 using System;
 using System.Text;
 
-using AppMotor.CliApp.Parameters;
+using AppMotor.CliApp.CommandLine;
+using AppMotor.CliApp.Terminals;
 using AppMotor.Core.Exceptions;
-using AppMotor.Core.System;
 
 using HDVP.Internals;
 using HDVP.Util.Properties;
@@ -30,6 +30,9 @@ namespace HDVP.Util
 {
     internal sealed class BenchmarkCommand : CliCommand
     {
+        /// <inheritdoc />
+        public override string? HelpText => LocalizableResources.HelpText_Benchmark;
+
         private CliParam<int> Seconds { get; } = new("--seconds", "-s")
         {
             HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
