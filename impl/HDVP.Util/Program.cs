@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 
 using AppMotor.CliApp;
+using AppMotor.CliApp.Parameters;
 
 using HDVP.Util.Properties;
 
@@ -13,7 +13,7 @@ namespace HDVP.Util
         protected override string AppDescription => LocalizableResources.AppDescription;
 
         /// <inheritdoc />
-        protected override IEnumerable<CliCommand> GetCommands()
+        protected override IEnumerable<CliVerb> GetVerbs()
         {
             yield return new BenchmarkCommand();
         }

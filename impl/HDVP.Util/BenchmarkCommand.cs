@@ -19,7 +19,7 @@
 using System;
 using System.Text;
 
-using AppMotor.CliApp;
+using AppMotor.CliApp.Parameters;
 using AppMotor.Core.Exceptions;
 using AppMotor.Core.System;
 
