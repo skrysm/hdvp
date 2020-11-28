@@ -9,8 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.CliApp" Version="0.1.0-prerelease1" />
-    <PackageReference Include="AppMotor.Core" Version="0.9.0-prerelease2" />
+    <PackageReference Include="AppMotor.CliApp" Version="0.1.0" />
+    <PackageReference Include="AppMotor.Core" Version="0.9.0" />
   </ItemGroup>
 
   <ItemGroup>
