@@ -6,6 +6,12 @@
     <TargetFramework>net5.0</TargetFramework>
 
     <OutputType>Exe</OutputType>
+
+    <!--
+      Use member/type trimming.
+      See: https://devblogs.microsoft.com/dotnet/app-trimming-in-net-5/
+    -->
+    <TrimMode>Link</TrimMode>
   </PropertyGroup>
 
   <ItemGroup>
