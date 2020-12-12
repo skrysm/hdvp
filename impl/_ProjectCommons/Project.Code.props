@@ -1,0 +1,99 @@
+<!--
+
+  Default settings for all production code (i.e. non-test) projects.
+
+  To use it, create a .NET Core or .NET Standard project (modern project format)
+  and then add this line at the top:
+
+    <Import Project="$(ProjectCommonsDirectory)Project.Code.props" />
+
+-->
+<!-- You can find the latest version of this file here: https://github.com/skrysmanski/base-dotnet -->
+<Project>
+
+  <Import Project="$(MSBuildThisFileDirectory)Project.Shared.props" />
+
+  <PropertyGroup>
+    <!--
+      Assume git by default.
+
+      NOTE: This property controls various things and thus you should make sure it's correct.
+      NOTE 2: The name of this property is pre-defined. See: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#nuget-metadata-properties
+    -->
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <!--
+    Make copyright based on assembly name (a best pratice for open source projects).
+
+    For some more details on copyrights in open source projects, see:
+    * https://www.linuxfoundation.org/blog/2020/01/copyright-notices-in-open-source-software-projects/
+    * https://docs.github.com/en/free-pro-team@latest/github/site-policy/github-terms-of-service#6-contributions-under-repository-license
+  -->
+  <Target Name="_GenerateCopyright" BeforeTargets="GetAssemblyAttributes" Condition=" '$(Copyright)' == '' ">
+    <PropertyGroup>
+      <Copyright>© $([System.DateTime]::Now.ToString(yyyy)) Contributors to $(AssemblyName)</Copyright>
+    </PropertyGroup>
+  </Target>
+
+  <!--
+    Put the current commit's id (hash) in the "Product version" ($(InformationalVersion)). This happens automatically
+    via the $(SourceRevisionId) property.
+
+    This version is visible in the "Details" tab of the file properties of the generated assembly.
+
+    See: https://docs.microsoft.com/en-us/dotnet/core/tools/csproj#assemblyinfo-properties
+  -->
+  <Target Name="_GenerateSourceRevisionId" BeforeTargets="GetAssemblyVersion" Condition=" '$(SourceRevisionId)' == '' AND '$(RepositoryType)' == 'git' ">
+    <Exec Command="git rev-parse --short=12 HEAD" ConsoleToMSBuild="true" StandardOutputImportance="low">
+      <Output TaskParameter="ConsoleOutput" PropertyName="SourceRevisionId" />
+    </Exec>
+  </Target>
+
+  <!--
+    Sets "File Description" property (in the Details tab in the file properties of the generated assembly) to $(Description),
+    if there is one. Otherwise, by default, this value is set to the name of the assembly.
+  -->
+  <Target Name="_GenerateFileDescriptionInfo" BeforeTargets="GetAssemblyAttributes" Condition=" '$(Description)' != '' ">
+    <PropertyGroup>
+      <AssemblyTitle>$(Description)</AssemblyTitle>
+    </PropertyGroup>
+  </Target>
+
+  <ItemGroup>
+    <!-- Make internals automatically available to the associated tests project. -->
+    <InternalsVisibleTo Include="$(MSBuildProjectName).Tests" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Shared assembly attributes that can't be set via .props file. -->
+    <Compile Include="$(MSBuildThisFileDirectory)CommonAssemblyInfo.cs" Link="Properties\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <!--
+    .NET static code analysis
+
+    See: https://docs.microsoft.com/en-us/dotnet/fundamentals/code-analysis/overview
+  -->
+  <PropertyGroup Label="Code Analysis">
+    <!--
+      Enable all CA rules by default. Otherwise only a small subset will be enabled by default.
+      See: https://docs.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#analysismode
+    -->
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Provides Microsoft's/.NET's static code analyzers.
+
+      NOTE: While - since .NET 5 - the code analyzers ship with the .NET SDK, the shipped
+        version will only update when the SDK itself updates (which - on Windows - usually means
+        an update of Visual Studio). With this NuGet package reference we have full control
+        over the version that's being used (and can upgrade faster than the SDK, if necessary).
+        See: https://github.com/dotnet/roslyn-analyzers/issues/4506
+    -->
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.1" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Code.props', '$(MSBuildThisFileDirectory)'))" />
+  <Import Project="$(ProjectCommonsDirectory)Project.Code.props" />
+  <Import Project="$(ProjectCommonsDirectory)Project.NuGetPackage.props" />
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -11,16 +12,20 @@
 
   <!--
     NuGet (and assembly) properties
-    See 'Project.Code.props' for more details.
   -->
   <PropertyGroup>
-    <PackageId>HDVP</PackageId>
     <Description>The human data verification protocol.</Description>
+
     <Authors>Sebastian Krysmanski</Authors>
+
+    <!-- See: https://spdx.org/licenses/ -->
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+
+    <RepositoryUrl>https://github.com/skrysmanski/hdvp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.Core" Version="0.9.0" />
+    <PackageReference Include="AppMotor.Core" Version="0.9.1" />
     <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>

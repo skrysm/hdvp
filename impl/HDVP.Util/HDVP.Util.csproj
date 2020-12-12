@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <Import Project="$([MSBuild]::GetPathOfFileAbove('Project.Code.props', '$(MSBuildThisFileDirectory)'))" />
+  <Import Project="$(ProjectCommonsDirectory)Project.Code.props" />
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -15,8 +15,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.CliApp" Version="0.1.0" />
-    <PackageReference Include="AppMotor.Core" Version="0.9.0" />
+    <PackageReference Include="AppMotor.CliApp" Version="0.1.1" />
+    <PackageReference Include="AppMotor.Core" Version="0.9.1" />
   </ItemGroup>
 
   <ItemGroup>
