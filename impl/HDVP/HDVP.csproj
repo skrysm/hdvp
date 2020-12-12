@@ -25,6 +25,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <CommonlyUsedTypes Include="HDVP.HdvpVerificationCodeProvider" />
+    <CommonlyUsedTypes Include="HDVP.HdvpVerificationCode" />
+    <CommonlyUsedTypes Include="HDVP.HdvpVerifiableData" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AppMotor.Core" Version="0.9.1" />
     <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
     <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
