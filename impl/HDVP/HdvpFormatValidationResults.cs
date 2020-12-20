@@ -16,6 +16,9 @@
 
 namespace HDVP
 {
+    /// <summary>
+    /// The result for <see cref="HdvpVerificationCode.CheckFormat"/>.
+    /// </summary>
     public enum HdvpFormatValidationResults
     {
         /// <summary>

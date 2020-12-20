@@ -24,6 +24,17 @@ using JetBrains.Annotations;
 
 namespace HDVP
 {
+    /// <summary>
+    /// Represents a HDVP verification code - consisting of the <see cref="Code"/> itself and the
+    /// <see cref="Salt"/> used to create it. Binary data can be verified via <see cref="IsMatch"/>.
+    ///
+    /// <para>Instances of this class always represent "valid" verification code - i.e. codes that
+    /// have the correct format. The format of a string can be checked with <see cref="CheckFormat"/>.
+    /// </para>
+    ///
+    /// <para>Instance of this class can either be created for an existing code via <see cref="Create(string,HdvpSalt)"/>
+    /// or obtained via <see cref="HdvpVerificationCodeProvider.GetVerificationCode"/>.</para>
+    /// </summary>
     public sealed class HdvpVerificationCode
     {
         /// <summary>
@@ -31,16 +42,19 @@ namespace HDVP
         /// </summary>
         private static IVerificationCodeEncoding CodeEncoding { get; } = new ZBase32VerificationCodeEncoding();
 
+        /// <summary>
+        /// The minimum length (i.e. <c>Code.Length</c>) of a verification code (including length character).
+        /// </summary>
+        /// <seealso cref="MaxCodeLength"/>
         [PublicAPI]
         public static int MinCodeLength => 9;
 
         /// <summary>
         /// The maximum length (i.e. <c>Code.Length</c>) of a verification code (including length character).
         /// </summary>
-        /// <remarks>
-        /// This length uses "- 1" because we need to encode the values "0..31" - not "1..32".
-        /// </remarks>
+        /// <seealso cref="MinCodeLength"/>
         [PublicAPI]
+        // NOTE: We need to use "- 1" because for the length character we need to encode the values "0..31" - not "1..32".
         public static int MaxCodeLength { get; } = MinCodeLength + CodeEncoding.AvailableSymbolCount - 1;
 
         /// <summary>
@@ -50,7 +64,7 @@ namespace HDVP
         public string Code { get; }
 
         /// <summary>
-        /// The salt being used to create this verification code.
+        /// The salt that was used to create this verification code.
         /// </summary>
         [PublicAPI]
         public HdvpSalt Salt { get; }
@@ -61,6 +75,19 @@ namespace HDVP
             this.Salt = salt;
         }
 
+        /// <summary>
+        /// Creates an instance of this class from an existing verification code and its salt.
+        ///
+        /// <para>This main purpose of this method is to be used on the "client" side - i.e.
+        /// it takes the received salt and the verification code the user entered. For the
+        /// server side, see <see cref="HdvpVerificationCodeProvider.GetVerificationCode"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="verificationCode">The verification code (the user entered)</param>
+        /// <param name="salt">The salt received from the server</param>
+        /// <exception cref="ArgumentException">Thrown when the format of the <paramref name="verificationCode"/>
+        /// is invalid - i.e. if <see cref="CheckFormat"/> returns anything but
+        /// <see cref="HdvpFormatValidationResults.Valid"/>.</exception>
         [PublicAPI, MustUseReturnValue]
         public static HdvpVerificationCode Create(string verificationCode, HdvpSalt salt)
         {
@@ -73,6 +100,15 @@ namespace HDVP
             return new HdvpVerificationCode(verificationCode, salt);
         }
 
+        /// <summary>
+        /// Creates an instance of this class from its input data (on the server side).
+        /// </summary>
+        /// <param name="data">The binary data to verify</param>
+        /// <param name="salt">The salt to be used</param>
+        /// <param name="codeLength">The (expected) length of the code in characters.
+        /// This length includes the length character itself. Must be greater than or
+        /// equal to <see cref="MinCodeLength"/> and smaller than or equal to
+        /// <see cref="MaxCodeLength"/>.</param>
         [MustUseReturnValue]
         internal static HdvpVerificationCode Create(HdvpVerifiableData data, HdvpSalt salt, int codeLength)
         {
@@ -101,6 +137,9 @@ namespace HDVP
             return new HdvpVerificationCode(verificationCode, salt);
         }
 
+        /// <summary>
+        /// Checks whether the specified data matches this verification code.
+        /// </summary>
         [PublicAPI, Pure]
         public bool IsMatch(HdvpVerifiableData data)
         {
@@ -109,6 +148,29 @@ namespace HDVP
             return dataVerificationCode.Code == this.Code;
         }
 
+        /// <summary>
+        /// Checks the format of the specified verification code and returns what's wrong
+        /// with it - or <see cref="HdvpFormatValidationResults.Valid"/> if it's format
+        /// is valid.
+        ///
+        /// <para>Note: This method just checks the format (see remarks for details). It
+        /// basically says whether this code could(!) be valid when checked against some
+        /// binary data via <see cref="IsMatch"/>.</para>
+        /// </summary>
+        /// <remarks>
+        /// This method does a couple of things:
+        ///
+        /// <para>1. It checks that the length of the code falls in the range of
+        /// <see cref="MinCodeLength"/> and <see cref="MaxCodeLength"/>. If not,
+        /// <see cref="HdvpFormatValidationResults.InvalidLength"/> is returned.</para>
+        ///
+        /// <para>2. It checks that all characters of this code are valid z-base-32 characters.
+        /// If not, <see cref="HdvpFormatValidationResults.InvalidSymbols"/> is returned.</para>
+        ///
+        /// <para>3. It checks whether the code's expected length - encoded in the first character -
+        /// matches the actual code length. If not, <see cref="HdvpFormatValidationResults.InvalidLength"/>
+        /// is returned.</para>
+        /// </remarks>
         [PublicAPI, MustUseReturnValue]
         public static HdvpFormatValidationResults CheckFormat(string verificationCode)
         {

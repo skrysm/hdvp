@@ -23,7 +23,8 @@ using JetBrains.Annotations;
 namespace HDVP
 {
     /// <summary>
-    /// Represents the binary data that's to be verified with HDVP.
+    /// Represents the binary data that's to be verified with HDVP. Instances of this class
+    /// can be created either via <see cref="ReadFromMemory"/> or <see cref="ReadFromStream"/>.
     /// </summary>
     public sealed class HdvpVerifiableData
     {
@@ -44,6 +45,11 @@ namespace HDVP
             this.Hash = hash.ToImmutableArray();
         }
 
+        /// <summary>
+        /// Creates an instance of this class from data that's already available in memory
+        /// (in form of a byte array).
+        /// </summary>
+        /// <seealso cref="ReadFromStream"/>
         [PublicAPI, MustUseReturnValue]
         public static HdvpVerifiableData ReadFromMemory(byte[] data)
         {
@@ -54,6 +60,12 @@ namespace HDVP
             return new HdvpVerifiableData(hash);
         }
 
+        /// <summary>
+        /// Creates an instance of this class from data available in a stream.
+        ///
+        /// <para>Note: This method reads the whole stream but does not(!) store
+        /// its contents in memory.</para>
+        /// </summary>
         [PublicAPI, MustUseReturnValue]
         public static HdvpVerifiableData ReadFromStream(Stream stream)
         {
