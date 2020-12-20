@@ -1,4 +1,6 @@
-# Human Data Verification Protocol (HDVP)
+﻿# Human Data Verification Protocol (HDVP)
+
+[![NuGet](https://img.shields.io/nuget/v/HDVP.svg)](https://www.nuget.org/packages/HDVP/)
 
 The *Human Data Verification Protocol* provides a way to securely transmit arbitrary data over an insecure network.
 
