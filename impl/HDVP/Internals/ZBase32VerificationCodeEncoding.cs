@@ -25,7 +25,7 @@ namespace HDVP.Internals
     {
         private const string ZBASE32_SYMBOLS = "ybndrfg8ejkmcpqxot1uwisza345h769";
 
-        private static readonly Base32Encoding ZBASE32_ENCODING = new Base32Encoding(ZBASE32_SYMBOLS, paddingChar: null);
+        private static readonly Base32Encoding ZBASE32_ENCODING = new(ZBASE32_SYMBOLS, paddingChar: null);
 
         private static readonly Dictionary<char, byte> ZBASE32_INVERSE_SYMBOLS = Rfc4648Encoding.CreateInverseSymbolsDictionary(ZBASE32_SYMBOLS);
 

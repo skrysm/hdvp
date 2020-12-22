@@ -52,15 +52,15 @@ namespace HDVP
         [PublicAPI]
         public DateTime VerificationCodeValidUntil { get; private set; }
 
-        private HdvpVerificationCode? m_currentVerificationCode;
+        private HdvpVerificationCode? _currentVerificationCode;
 
-        private readonly HdvpVerifiableData m_data;
+        private readonly HdvpVerifiableData _data;
 
-        private readonly int m_verificationCodeLength;
+        private readonly int _verificationCodeLength;
 
-        private readonly TimeSpan m_verificationCodeTimeToLive;
+        private readonly TimeSpan _verificationCodeTimeToLive;
 
-        private readonly IDateTimeProvider m_dateTimeProvider;
+        private readonly IDateTimeProvider _dateTimeProvider;
 
         /// <summary>
         /// Constructor. Uses <see cref="DEFAULT_CODE_LENGTH"/> as code length and <see cref="DEFAULT_TIME_TO_LIVE"/>
@@ -115,12 +115,12 @@ namespace HDVP
         {
             Validate.Argument.IsNotNull(data, nameof(data));
 
-            this.m_data = data;
-            this.m_verificationCodeLength = verificationCodeLength;
-            this.m_verificationCodeTimeToLive = verificationCodeTimeToLive;
-            this.m_dateTimeProvider = dateTimeProvider ?? DefaultDateTimeProvider.Instance;
+            this._data = data;
+            this._verificationCodeLength = verificationCodeLength;
+            this._verificationCodeTimeToLive = verificationCodeTimeToLive;
+            this._dateTimeProvider = dateTimeProvider ?? DefaultDateTimeProvider.Instance;
 
-            this.VerificationCodeValidUntil = this.m_dateTimeProvider.UtcNow + verificationCodeTimeToLive;
+            this.VerificationCodeValidUntil = this._dateTimeProvider.UtcNow + verificationCodeTimeToLive;
         }
 
         /// <summary>
@@ -134,16 +134,16 @@ namespace HDVP
         [PublicAPI]
         public HdvpVerificationCode GetVerificationCode()
         {
-            if (this.m_currentVerificationCode != null && this.m_dateTimeProvider.UtcNow < this.VerificationCodeValidUntil)
+            if (this._currentVerificationCode != null && this._dateTimeProvider.UtcNow < this.VerificationCodeValidUntil)
             {
-                return this.m_currentVerificationCode;
+                return this._currentVerificationCode;
             }
 
             var salt = HdvpSalt.CreateNewSalt();
-            this.m_currentVerificationCode = HdvpVerificationCode.Create(this.m_data, salt, this.m_verificationCodeLength);
-            this.VerificationCodeValidUntil = this.m_dateTimeProvider.UtcNow + this.m_verificationCodeTimeToLive;
+            this._currentVerificationCode = HdvpVerificationCode.Create(this._data, salt, this._verificationCodeLength);
+            this.VerificationCodeValidUntil = this._dateTimeProvider.UtcNow + this._verificationCodeTimeToLive;
 
-            return this.m_currentVerificationCode;
+            return this._currentVerificationCode;
         }
     }
 }
