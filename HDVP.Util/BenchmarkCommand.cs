@@ -48,10 +48,6 @@ namespace HDVP.Util
         /// <inheritdoc />
         protected override CliCommandExecutor Executor => new(Execute);
 
-        public BenchmarkCommand() : base("benchmark")
-        {
-        }
-
         private void Execute()
         {
             if (this.Seconds.Value < 1)
