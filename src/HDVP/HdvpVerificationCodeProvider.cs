@@ -113,7 +113,7 @@ namespace HDVP
                 IDateTimeProvider? dateTimeProvider = null
             )
         {
-            Validate.Argument.IsNotNull(data, nameof(data));
+            Validate.ArgumentWithName(nameof(data)).IsNotNull(data);
 
             this._data = data;
             this._verificationCodeLength = verificationCodeLength;

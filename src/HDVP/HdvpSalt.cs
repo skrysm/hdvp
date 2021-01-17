@@ -48,7 +48,7 @@ namespace HDVP
         /// <param name="value">The salt; must be exactly 32 bytes long (see <see cref="SaltLength"/>).</param>
         public HdvpSalt([NotNull] IReadOnlyCollection<byte> value)
         {
-            Validate.Argument.IsNotNull(value, nameof(value));
+            Validate.ArgumentWithName(nameof(value)).IsNotNull(value);
 
             if (value.Count != SaltLength)
             {

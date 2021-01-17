@@ -112,7 +112,7 @@ namespace HDVP
         [MustUseReturnValue]
         internal static HdvpVerificationCode Create(HdvpVerifiableData data, HdvpSalt salt, int codeLength)
         {
-            Validate.Argument.IsNotNull(data, nameof(data));
+            Validate.ArgumentWithName(nameof(data)).IsNotNull(data);
 
             if (codeLength < MinCodeLength || codeLength > MaxCodeLength)
             {
@@ -174,7 +174,7 @@ namespace HDVP
         [PublicAPI, MustUseReturnValue]
         public static HdvpFormatValidationResults CheckFormat(string verificationCode)
         {
-            Validate.Argument.IsNotNull(verificationCode, nameof(verificationCode));
+            Validate.ArgumentWithName(nameof(verificationCode)).IsNotNull(verificationCode);
 
             if (verificationCode.Length < MinCodeLength || verificationCode.Length > MaxCodeLength)
             {
