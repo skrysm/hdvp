@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HDVP\HDVP.csproj" />
+    <ProjectReference Include="..\..\src\HDVP\HDVP.csproj" />
   </ItemGroup>
 
 </Project>
