@@ -27,7 +27,7 @@ namespace HDVP.Tests
 
             codeProvider.VerificationCodeValidUntil.ShouldBe(
                 codeProviderCreationTime + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE,
-                tolerance: TimeSpan.FromSeconds(1)
+                tolerance: TimeSpan.FromSeconds(2)
             );
             codeProvider.VerificationCodeValidUntil.Kind.ShouldBe(DateTimeKind.Utc);
         }
