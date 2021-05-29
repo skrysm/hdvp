@@ -32,6 +32,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDVP.Util", "src\HDVP.Util\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HDVP.Tests", "tests\HDVP.Tests\HDVP.Tests.csproj", "{6C44E362-4A0A-4443-B50B-4B52CBBC9467}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_StyleGuide", "_StyleGuide", "{4B2CF066-63A2-47CD-886C-B9B83BF213F4}"
+	ProjectSection(SolutionItems) = preProject
+		_StyleGuide\ca.globalconfig = _StyleGuide\ca.globalconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +61,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{BA1E9B9F-AD3B-41A4-B9AC-490A101FD762} = {D449EFC6-4D96-4FF2-B01F-A4748B50D9C3}
+		{4B2CF066-63A2-47CD-886C-B9B83BF213F4} = {D449EFC6-4D96-4FF2-B01F-A4748B50D9C3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FF64C9CC-C599-47C6-892D-FB620795361C}
