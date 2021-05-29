@@ -14,7 +14,7 @@ See the License for the specific language governing permissions and&#xD;
 limitations under the License.&#xD;
 </s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2915C9E8038FC44AA301BA74D27B001F/@KeyIndexDefined">True</s:Boolean>
-	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2915C9E8038FC44AA301BA74D27B001F/RelativePath/@EntryValue">..\AppMotor.StyleGuide\AppMotor.StyleGuide.DotSettings</s:String>
+	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=2915C9E8038FC44AA301BA74D27B001F/RelativePath/@EntryValue">..\_StyleGuide\AppMotor.StyleGuide.DotSettings</s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2915C9E8038FC44AA301BA74D27B001F/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File2915C9E8038FC44AA301BA74D27B001F/RelativePriority/@EntryValue">1</s:Double>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=HDVP/@EntryIndexedValue">True</s:Boolean>
