@@ -14,8 +14,10 @@
 // limitations under the License.
 #endregion
 
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 
 using JetBrains.Annotations;
@@ -40,22 +42,22 @@ namespace HDVP
         /// </summary>
         public ImmutableArray<byte> Hash { get; }
 
-        private HdvpVerifiableData(byte[] hash)
+        private HdvpVerifiableData(IEnumerable<byte> hash)
         {
             this.Hash = hash.ToImmutableArray();
         }
 
         /// <summary>
         /// Creates an instance of this class from data that's already available in memory
-        /// (in form of a byte array).
+        /// (in form of a byte array or something similar).
         /// </summary>
         /// <seealso cref="ReadFromStream"/>
         [PublicAPI, MustUseReturnValue]
-        public static HdvpVerifiableData ReadFromMemory(byte[] data)
+        public static HdvpVerifiableData ReadFromMemory(IEnumerable<byte> data)
         {
             using var hashAlgorithm = CreateHashAlgorithm();
 
-            var hash = hashAlgorithm.ComputeHash(data);
+            var hash = hashAlgorithm.ComputeHash(data as byte[] ?? data.ToArray());
 
             return new HdvpVerifiableData(hash);
         }
