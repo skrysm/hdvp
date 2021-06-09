@@ -25,11 +25,11 @@ namespace HDVP.Tests
 
             verificationCode1.ShouldBeSameAs(verificationCode2);
 
-            codeProvider.VerificationCodeValidUntil.ShouldBe(
+            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(
                 codeProviderCreationTime + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE,
                 tolerance: TimeSpan.FromSeconds(2)
             );
-            codeProvider.VerificationCodeValidUntil.Kind.ShouldBe(DateTimeKind.Utc);
+            codeProvider.VerificationCodeValidUntilUtc.Kind.ShouldBe(DateTimeKind.Utc);
         }
 
         [Fact]
@@ -42,14 +42,14 @@ namespace HDVP.Tests
 
             var verificationCode1 = codeProvider.GetVerificationCode();
 
-            dateTimeProvider.UtcNow = codeProvider.VerificationCodeValidUntil + TimeSpan.FromSeconds(1);
+            dateTimeProvider.UtcNow = codeProvider.VerificationCodeValidUntilUtc + TimeSpan.FromSeconds(1);
 
             var verificationCode2 = codeProvider.GetVerificationCode();
 
             verificationCode2.Salt.ShouldNotBe(verificationCode1.Salt);
             verificationCode2.Code.ShouldNotBe(verificationCode1.Code);
 
-            codeProvider.VerificationCodeValidUntil.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
+            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
         }
 
         private sealed class TestDateTimeProvider : IDateTimeProvider
