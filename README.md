@@ -42,9 +42,71 @@ A verification looks like this:
 
     dry9odphhaa3
 
-## Next Steps
+## Using the C# Implementation
 
-The directory `impl` in this repository contains the HDVP reference implementation (in C#).
+The directory `src` in this repository contains the HDVP reference implementation (in C#).
+
+On the server side (that provides binary data to download), you first need to read the binary data into an instance of `HdvpVerifiableData`. For this, use either `HdvpVerifiableData.ReadFromMemory()` or `HdvpVerifiableData.ReadFromStream()`.
+
+```c#
+byte[] myDataAsByteArray = ...
+var myVerifiableData = HdvpVerifiableData.ReadFromMemory(myDataAsByteArray);
+```
+
+Next, with this instance you create an instance of `HdvpVerificationCodeProvider`:
+
+```c#
+var codeProvider = new HdvpVerificationCodeProvider(myVerifiableData);
+```
+
+To get the currently valid verification code (remember that validation codes are only valid for a certain amount of time), use the `GetVerificationCode()` method:
+
+```c#
+HdvpVerificationCode currentVerificationCode = codeProvider.GetVerificationCode();
+```
+
+You can check for how long the current verification code is valid via `codeProvider.VerificationCodeValidUntilUtc`.
+
+The `HdvpVerificationCode` class provides you with two important properties:
+
+* `Code`: the verification code as a string
+* `Salt`: the salt of the verification code
+
+You can now display the `Code` to the user and provide the `Salt` as download for the client.
+
+On the client side, you then:
+
+1. download the binary data from the server
+1. download the salt from the server
+1. let the user enter the verification code
+
+With the entered code, you first want to checked whether its format is correct:
+
+```c#
+var verificationCodeCheckResult = HdvpVerificationCode.CheckFormat(verificationCodeAsString);
+if (verificationCodeCheckResult != HdvpFormatValidationResults.Valid)
+{
+    // Error reporting here
+}
+```
+
+The last step is to verify the binary data against the verification code the user entered:
+
+```c#
+var data = HdvpVerifiableData.ReadFromMemory(...);
+var hdvpVerificationCode = HdvpVerificationCode.Create(verificationCodeAsString, new HdvpSalt(salt));
+if (!hdvpVerificationCode.IsMatch(verifiableData))
+{
+    // Error handling here
+}
+```
+
+*Notes:*
+
+* It's recommended to download the salt *before* asking the user to enter the verification. This is because the salt is changed every time the verification code changes and by downloading it before asking the user to enter the verification, it doesn't matter if the user is too slow to enter the code.
+* It's also recommended (for the same reason) to re-download the code *every time* before asking the user to enter the verification code.
+
+## Other Documentation
 
 The specification of HDVP can be found in [SPEC.md](SPEC.md).
 
