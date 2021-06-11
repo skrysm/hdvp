@@ -46,16 +46,18 @@ A verification looks like this:
 
 The directory `src` in this repository contains the HDVP reference implementation (in C#).
 
-On the server side (that provides binary data to download), you first need to read the binary data into an instance of `HdvpVerifiableData`. For this, use either `HdvpVerifiableData.ReadFromMemory()` or `HdvpVerifiableData.ReadFromStream()`.
+On the server side (that provides binary data to download), you first need to create an instance of `HdvpVerificationCodeProvider`:
 
 ```c#
 byte[] myDataAsByteArray = ...
-var myVerifiableData = HdvpVerifiableData.ReadFromMemory(myDataAsByteArray);
+var codeProvider = new HdvpVerificationCodeProvider(myDataAsByteArray);
 ```
 
-Next, with this instance you create an instance of `HdvpVerificationCodeProvider`:
+Or:
 
 ```c#
+Stream myDataAsStream = ...
+var myVerifiableData = HdvpVerifiableData.ReadFromStream(myDataAsStream);
 var codeProvider = new HdvpVerificationCodeProvider(myVerifiableData);
 ```
 
@@ -93,9 +95,10 @@ if (verificationCodeCheckResult != HdvpFormatValidationResults.Valid)
 The last step is to verify the binary data against the verification code the user entered:
 
 ```c#
-var data = HdvpVerifiableData.ReadFromMemory(...);
-var hdvpVerificationCode = HdvpVerificationCode.Create(verificationCodeAsString, new HdvpSalt(salt));
-if (!hdvpVerificationCode.IsMatch(verifiableData))
+byte[] binaryData = ...;
+byte[] salt = ...;
+var hdvpVerificationCode = HdvpVerificationCode.Create(verificationCodeAsString, salt);
+if (!hdvpVerificationCode.IsMatch(binaryData))
 {
     // Error handling here
 }

@@ -59,7 +59,7 @@ namespace HDVP.Util
             Terminal.WriteLine();
 
             var salt = HdvpSalt.CreateNewSalt();
-            var verifiableData = HdvpVerifiableData.ReadFromMemory(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
+            var verifiableData = new HdvpVerifiableData(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
 
             var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
 

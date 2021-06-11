@@ -26,8 +26,11 @@ namespace HDVP
 {
     /// <summary>
     /// Represents the binary data that's to be verified with HDVP. Instances of this class
-    /// can be created either via <see cref="ReadFromMemory"/> or <see cref="ReadFromStream"/>.
+    /// can be created either via <see cref="CalculateHashFromMemory"/> or <see cref="ReadFromStream"/>.
     /// </summary>
+    /// <remarks>
+    /// For the reason why this class exists, see <see cref="Hash"/>.
+    /// </remarks>
     public sealed class HdvpVerifiableData
     {
         /// <summary>
@@ -42,24 +45,37 @@ namespace HDVP
         /// </summary>
         public ImmutableArray<byte> Hash { get; }
 
-        private HdvpVerifiableData(IEnumerable<byte> hash)
-        {
-            this.Hash = hash.ToImmutableArray();
-        }
-
         /// <summary>
         /// Creates an instance of this class from data that's already available in memory
         /// (in form of a byte array or something similar).
         /// </summary>
         /// <seealso cref="ReadFromStream"/>
-        [PublicAPI, MustUseReturnValue]
-        public static HdvpVerifiableData ReadFromMemory(IEnumerable<byte> data)
+        [PublicAPI]
+        public HdvpVerifiableData(IEnumerable<byte> bytes)
+            : this(CalculateHashFromMemory(bytes))
+        {
+        }
+
+        private HdvpVerifiableData(ImmutableArray<byte> hash)
+        {
+            this.Hash = hash;
+        }
+
+        private static ImmutableArray<byte> CalculateHashFromMemory(IEnumerable<byte> data)
         {
             using var hashAlgorithm = CreateHashAlgorithm();
 
             var hash = hashAlgorithm.ComputeHash(data as byte[] ?? data.ToArray());
 
-            return new HdvpVerifiableData(hash);
+            return hash.ToImmutableArray();
+        }
+
+        /// <summary>
+        /// Implicit conversion from byte array.
+        /// </summary>
+        public static implicit operator HdvpVerifiableData(byte[] bytes)
+        {
+            return new(bytes);
         }
 
         /// <summary>

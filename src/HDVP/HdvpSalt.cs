@@ -59,6 +59,14 @@ namespace HDVP
         }
 
         /// <summary>
+        /// Implicit conversion from byte array.
+        /// </summary>
+        public static implicit operator HdvpSalt(byte[] bytes)
+        {
+            return new(bytes);
+        }
+
+        /// <summary>
         /// Creates a new, cryptographically random HDVP salt.
         /// </summary>
         [MustUseReturnValue]

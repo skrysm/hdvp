@@ -14,7 +14,7 @@ namespace HDVP.TestUtils
                 "At vero eos et accusam et justo duo dolores et ea rebum."
             );
 
-            return HdvpVerifiableData.ReadFromMemory(dataBytes);
+            return new HdvpVerifiableData(dataBytes);
         }
 
         [MustUseReturnValue]
