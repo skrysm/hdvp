@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Security.Cryptography;
 
 using AppMotor.Core.Utils;
@@ -28,7 +29,7 @@ namespace HDVP
     /// <summary>
     /// Represents the salt using in a <see cref="HdvpVerificationCode"/>
     /// </summary>
-    public sealed class HdvpSalt
+    public sealed class HdvpSalt : IEquatable<HdvpSalt>
     {
         /// <summary>
         /// The length an HDVP salt must have.
@@ -78,6 +79,44 @@ namespace HDVP
             rngCryptoServiceProvider.GetBytes(salt);
 
             return new HdvpSalt(salt);
+        }
+
+        /// <inheritdoc />
+        public bool Equals(HdvpSalt? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.Value.SequenceEqual(other.Value);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || obj is HdvpSalt other && Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return BitConverter.ToInt32(this.Value.AsSpan());
+        }
+
+        public static bool operator ==(HdvpSalt? left, HdvpSalt? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(HdvpSalt? left, HdvpSalt? right)
+        {
+            return !Equals(left, right);
         }
     }
 }
