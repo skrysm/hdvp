@@ -52,6 +52,18 @@ namespace HDVP.Tests
             codeProvider.VerificationCodeValidUntilUtc.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
         }
 
+        [Fact]
+        public void Test_Constructor1()
+        {
+            var data = TestDataProvider.CreateVerifiableData();
+            var dateTimeProvider = new TestDateTimeProvider();
+
+            var codeProvider = new HdvpVerificationCodeProvider(data, dateTimeProvider);
+
+            codeProvider.GetVerificationCode().Code.Length.ShouldBe(HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
+            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
+        }
+
         private sealed class TestDateTimeProvider : IDateTimeProvider
         {
             /// <inheritdoc />

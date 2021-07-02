@@ -87,6 +87,10 @@ namespace HDVP.Tests
             HdvpVerificationCode.CheckFormat(longerCode1).ShouldBe(HdvpFormatValidationResults.InvalidLength);
             Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(longerCode1, salt));
 
+            var codeWithInvalidSymbol = verificationCode1.Code.Remove(2, 1).Insert(2, "@");
+            HdvpVerificationCode.CheckFormat(codeWithInvalidSymbol).ShouldBe(HdvpFormatValidationResults.InvalidSymbols);
+            Should.Throw<ArgumentException>(() => HdvpVerificationCode.Create(codeWithInvalidSymbol, salt));
+
             // Setup 2
             var verificationCode2 = HdvpVerificationCode.Create(data, salt, codeLength: HdvpVerificationCode.MinCodeLength);
 
