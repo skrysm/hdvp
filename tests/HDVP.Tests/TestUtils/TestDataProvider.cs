@@ -9,12 +9,16 @@ namespace HDVP.TestUtils
         [MustUseReturnValue]
         public static HdvpVerifiableData CreateVerifiableData()
         {
-            var dataBytes = Encoding.UTF8.GetBytes(
+            return new(CreateVerifiableDataRaw());
+        }
+
+        [MustUseReturnValue]
+        public static byte[] CreateVerifiableDataRaw()
+        {
+            return Encoding.UTF8.GetBytes(
                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. " +
                 "At vero eos et accusam et justo duo dolores et ea rebum."
             );
-
-            return new HdvpVerifiableData(dataBytes);
         }
 
         [MustUseReturnValue]

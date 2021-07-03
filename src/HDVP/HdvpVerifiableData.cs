@@ -14,6 +14,7 @@
 // limitations under the License.
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
@@ -31,7 +32,7 @@ namespace HDVP
     /// <remarks>
     /// For the reason why this class exists, see <see cref="Hash"/>.
     /// </remarks>
-    public sealed class HdvpVerifiableData
+    public sealed class HdvpVerifiableData : IEquatable<HdvpVerifiableData>
     {
         /// <summary>
         /// The verifiable data - "reduced" to a hash. Hashing the data has two main benefits:
@@ -91,13 +92,51 @@ namespace HDVP
 
             var hash = hashAlgorithm.ComputeHash(stream);
 
-            return new HdvpVerifiableData(hash);
+            return new HdvpVerifiableData(hash.ToImmutableArray());
         }
 
         [MustUseReturnValue]
         private static HashAlgorithm CreateHashAlgorithm()
         {
             return SHA512.Create();
+        }
+
+        /// <inheritdoc />
+        public bool Equals(HdvpVerifiableData? other)
+        {
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            return this.Hash.SequenceEqual(other.Hash);
+        }
+
+        /// <inheritdoc />
+        public override bool Equals(object? obj)
+        {
+            return ReferenceEquals(this, obj) || obj is HdvpVerifiableData other && Equals(other);
+        }
+
+        /// <inheritdoc />
+        public override int GetHashCode()
+        {
+            return BitConverter.ToInt32(this.Hash.AsSpan());
+        }
+
+        public static bool operator ==(HdvpVerifiableData? left, HdvpVerifiableData? right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(HdvpVerifiableData? left, HdvpVerifiableData? right)
+        {
+            return !Equals(left, right);
         }
     }
 }
