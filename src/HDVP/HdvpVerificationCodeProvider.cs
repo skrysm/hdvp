@@ -26,14 +26,14 @@ namespace HDVP
     /// This class represents the "server side" in HDVP. It generates the verification codes
     /// to be displayed to the user (see <see cref="GetVerificationCode"/>). It also manages
     /// the verification code's supplemental data (e.g. the hash) as well as its lifetime
-    /// (see <see cref="VerificationCodeValidUntilUtc"/>).
+    /// (see <see cref="VerificationCodeValidUntil"/>).
     /// </summary>
     public class HdvpVerificationCodeProvider
     {
         /// <summary>
         /// The default time-to-live for a verification code.
         /// </summary>
-        /// <seealso cref="VerificationCodeValidUntilUtc"/>
+        /// <seealso cref="VerificationCodeValidUntil"/>
         [PublicAPI]
         public static readonly TimeSpan DEFAULT_TIME_TO_LIVE = TimeSpan.FromMinutes(1);
 
@@ -48,11 +48,9 @@ namespace HDVP
         /// is still valid. As long as this time has not yet been reached, the verification code returned
         /// by <see cref="GetVerificationCode"/> does not change. Once this time has passed, a new
         /// verification will be created automatically.
-        ///
-        /// <para>Note: The date time will be in UTC.</para>
         /// </summary>
         [PublicAPI]
-        public DateTime VerificationCodeValidUntilUtc { get; private set; }
+        public DateTimeUtc VerificationCodeValidUntil { get; private set; }
 
         private HdvpVerificationCode? _currentVerificationCode;
 
@@ -122,12 +120,12 @@ namespace HDVP
             this._verificationCodeTimeToLive = verificationCodeTimeToLive;
             this._dateTimeProvider = dateTimeProvider ?? DefaultDateTimeProvider.Instance;
 
-            this.VerificationCodeValidUntilUtc = this._dateTimeProvider.UtcNow + verificationCodeTimeToLive;
+            this.VerificationCodeValidUntil = this._dateTimeProvider.UtcNow + verificationCodeTimeToLive;
         }
 
         /// <summary>
         /// Returns the current verification code. If the lifetime of the last verification code has expired,
-        /// generates a new verification code automatically and updates <see cref="VerificationCodeValidUntilUtc"/>.
+        /// generates a new verification code automatically and updates <see cref="VerificationCodeValidUntil"/>.
         ///
         /// <para>Note: Whenever a new verification code needs to be generated, this method takes a "long" time.
         /// On a modern desktop system it roughly takes 0.5 seconds - on a Raspberry Pi 4 it roughly takes 3
@@ -136,14 +134,14 @@ namespace HDVP
         [PublicAPI]
         public HdvpVerificationCode GetVerificationCode()
         {
-            if (this._currentVerificationCode != null && this._dateTimeProvider.UtcNow < this.VerificationCodeValidUntilUtc)
+            if (this._currentVerificationCode != null && this._dateTimeProvider.UtcNow < this.VerificationCodeValidUntil)
             {
                 return this._currentVerificationCode;
             }
 
             var salt = HdvpSalt.CreateNewSalt();
             this._currentVerificationCode = HdvpVerificationCode.Create(this._data, salt, this._verificationCodeLength);
-            this.VerificationCodeValidUntilUtc = this._dateTimeProvider.UtcNow + this._verificationCodeTimeToLive;
+            this.VerificationCodeValidUntil = this._dateTimeProvider.UtcNow + this._verificationCodeTimeToLive;
 
             return this._currentVerificationCode;
         }

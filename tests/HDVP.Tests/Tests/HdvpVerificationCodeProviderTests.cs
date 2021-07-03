@@ -25,11 +25,10 @@ namespace HDVP.Tests
 
             verificationCode1.ShouldBeSameAs(verificationCode2);
 
-            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(
+            codeProvider.VerificationCodeValidUntil.ToDateTime().ShouldBe(
                 codeProviderCreationTime + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE,
                 tolerance: TimeSpan.FromSeconds(2)
             );
-            codeProvider.VerificationCodeValidUntilUtc.Kind.ShouldBe(DateTimeKind.Utc);
         }
 
         [Fact]
@@ -42,14 +41,14 @@ namespace HDVP.Tests
 
             var verificationCode1 = codeProvider.GetVerificationCode();
 
-            dateTimeProvider.UtcNow = codeProvider.VerificationCodeValidUntilUtc + TimeSpan.FromSeconds(1);
+            dateTimeProvider.UtcNow = codeProvider.VerificationCodeValidUntil + TimeSpan.FromSeconds(1);
 
             var verificationCode2 = codeProvider.GetVerificationCode();
 
             verificationCode2.Salt.ShouldNotBe(verificationCode1.Salt);
             verificationCode2.Code.ShouldNotBe(verificationCode1.Code);
 
-            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
+            codeProvider.VerificationCodeValidUntil.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
         }
 
         [Fact]
@@ -61,7 +60,7 @@ namespace HDVP.Tests
             var codeProvider = new HdvpVerificationCodeProvider(data, dateTimeProvider);
 
             codeProvider.GetVerificationCode().Code.Length.ShouldBe(HdvpVerificationCodeProvider.DEFAULT_CODE_LENGTH);
-            codeProvider.VerificationCodeValidUntilUtc.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
+            codeProvider.VerificationCodeValidUntil.ShouldBe(dateTimeProvider.UtcNow + HdvpVerificationCodeProvider.DEFAULT_TIME_TO_LIVE);
         }
 
         private sealed class TestDateTimeProvider : IDateTimeProvider
@@ -70,7 +69,7 @@ namespace HDVP.Tests
             public DateTime LocalNow => throw new NotSupportedException();
 
             /// <inheritdoc />
-            public DateTime UtcNow { get; set; } = DateTime.UtcNow;
+            public DateTimeUtc UtcNow { get; set; } = DateTimeUtc.Now;
         }
     }
 }
