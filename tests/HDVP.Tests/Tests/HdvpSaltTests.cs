@@ -40,7 +40,7 @@ namespace HDVP.Tests
         [Fact]
         public void Test_ConversionFromByteArray()
         {
-            var bytes = TestDataProvider.CreateNonRandomSaltBytes();
+            var bytes = TestDataProvider.CreateNonRandomSaltRaw();
 
             HdvpSalt salt1 = new(bytes);
             salt1.Value.ShouldBe(bytes);
@@ -52,7 +52,7 @@ namespace HDVP.Tests
         [Fact]
         public void Test_Equals()
         {
-            var bytes = TestDataProvider.CreateNonRandomSaltBytes();
+            var bytes = TestDataProvider.CreateNonRandomSaltRaw();
 
             HdvpSalt salt1 = new(bytes);
             HdvpSalt salt2 = new(bytes);
@@ -77,7 +77,7 @@ namespace HDVP.Tests
         [Fact]
         public void Test_GetHashCode()
         {
-            var bytes = TestDataProvider.CreateNonRandomSaltBytes();
+            var bytes = TestDataProvider.CreateNonRandomSaltRaw();
 
             HdvpSalt salt1 = new(bytes);
             HdvpSalt salt2 = new(bytes);

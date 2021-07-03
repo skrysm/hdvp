@@ -20,11 +20,11 @@ namespace HDVP.TestUtils
         [MustUseReturnValue]
         public static HdvpSalt CreateNonRandomSalt()
         {
-            return new(CreateNonRandomSaltBytes());
+            return new(CreateNonRandomSaltRaw());
         }
 
         [MustUseReturnValue]
-        public static byte[] CreateNonRandomSaltBytes()
+        public static byte[] CreateNonRandomSaltRaw()
         {
             // NOTE: Must be exactly 32 bytes.
             return Encoding.ASCII.GetBytes("Stet clita kasd gubergren, no se");
