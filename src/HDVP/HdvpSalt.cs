@@ -109,11 +109,17 @@ namespace HDVP
             return BitConverter.ToInt32(this.Value.AsSpan());
         }
 
+        /// <summary>
+        /// Equals operator
+        /// </summary>
         public static bool operator ==(HdvpSalt? left, HdvpSalt? right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Not-equals operator
+        /// </summary>
         public static bool operator !=(HdvpSalt? left, HdvpSalt? right)
         {
             return !Equals(left, right);

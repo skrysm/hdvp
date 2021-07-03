@@ -129,11 +129,17 @@ namespace HDVP
             return BitConverter.ToInt32(this.Hash.AsSpan());
         }
 
+        /// <summary>
+        /// Equals operator
+        /// </summary>
         public static bool operator ==(HdvpVerifiableData? left, HdvpVerifiableData? right)
         {
             return Equals(left, right);
         }
 
+        /// <summary>
+        /// Not-equals operator
+        /// </summary>
         public static bool operator !=(HdvpVerifiableData? left, HdvpVerifiableData? right)
         {
             return !Equals(left, right);
