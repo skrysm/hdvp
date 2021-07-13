@@ -47,7 +47,7 @@ namespace HDVP
         /// Creates an instance of this class for a pre-existing salt.
         /// </summary>
         /// <param name="value">The salt; must be exactly 32 bytes long (see <see cref="SaltLength"/>).</param>
-        public HdvpSalt([NotNull] IReadOnlyCollection<byte> value)
+        public HdvpSalt(IReadOnlyCollection<byte> value)
         {
             Validate.ArgumentWithName(nameof(value)).IsNotNull(value);
 
