@@ -16,11 +16,9 @@
 
 #endregion
 
-using System;
 using System.Text;
 
 using AppMotor.CliApp.CommandLine;
-using AppMotor.CliApp.Terminals;
 using AppMotor.Core.Exceptions;
 
 using HDVP.Internals;

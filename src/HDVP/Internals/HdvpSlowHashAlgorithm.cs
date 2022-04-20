@@ -14,8 +14,6 @@
 // limitations under the License.
 #endregion
 
-using System.Linq;
-
 using JetBrains.Annotations;
 
 using Konscious.Security.Cryptography;

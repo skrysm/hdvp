@@ -1,6 +1,4 @@
-﻿using System;
-
-using HDVP.TestUtils;
+﻿using HDVP.TestUtils;
 
 using Shouldly;
 
