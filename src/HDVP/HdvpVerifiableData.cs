@@ -116,7 +116,7 @@ public sealed class HdvpVerifiableData : IEquatable<HdvpVerifiableData>
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        return ReferenceEquals(this, obj) || obj is HdvpVerifiableData other && Equals(other);
+        return ReferenceEquals(this, obj) || (obj is HdvpVerifiableData other && Equals(other));
     }
 
     /// <inheritdoc />

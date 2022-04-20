@@ -97,7 +97,7 @@ public sealed class HdvpSalt : IEquatable<HdvpSalt>
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        return ReferenceEquals(this, obj) || obj is HdvpSalt other && Equals(other);
+        return ReferenceEquals(this, obj) || (obj is HdvpSalt other && Equals(other));
     }
 
     /// <inheritdoc />
