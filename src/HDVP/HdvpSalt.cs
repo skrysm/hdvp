@@ -73,10 +73,10 @@ namespace HDVP
         [MustUseReturnValue]
         public static HdvpSalt CreateNewSalt()
         {
-            using var rngCryptoServiceProvider = new RNGCryptoServiceProvider();
+            using var randomNumberGenerator = RandomNumberGenerator.Create();
 
             var salt = new byte[SaltLength];
-            rngCryptoServiceProvider.GetBytes(salt);
+            randomNumberGenerator.GetBytes(salt);
 
             return new HdvpSalt(salt);
         }
