@@ -15,6 +15,9 @@
 *.log
 # Temporary files
 *.tmp
+# User files
+# See: https://en.wikipedia.org/wiki/.DS_Store
+.DS_Store
 
 
 #
