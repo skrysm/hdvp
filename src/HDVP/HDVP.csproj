@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.Core" Version="0.14.0" />
+    <PackageReference Include="AppMotor.Core" Version="0.15.0" />
     <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.2.1" />
-    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
