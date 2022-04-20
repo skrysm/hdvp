@@ -14,26 +14,25 @@
 // limitations under the License.
 #endregion
 
-namespace HDVP
+namespace HDVP;
+
+/// <summary>
+/// The result for <see cref="HdvpVerificationCode.CheckFormat"/>.
+/// </summary>
+public enum HdvpFormatValidationResults
 {
     /// <summary>
-    /// The result for <see cref="HdvpVerificationCode.CheckFormat"/>.
+    /// The format of the verification code is valid.
     /// </summary>
-    public enum HdvpFormatValidationResults
-    {
-        /// <summary>
-        /// The format of the verification code is valid.
-        /// </summary>
-        Valid,
+    Valid,
 
-        /// <summary>
-        /// The verification code contains invalid symbols (characters).
-        /// </summary>
-        InvalidSymbols,
+    /// <summary>
+    /// The verification code contains invalid symbols (characters).
+    /// </summary>
+    InvalidSymbols,
 
-        /// <summary>
-        /// The length of the verification code is invalid.
-        /// </summary>
-        InvalidLength,
-    }
+    /// <summary>
+    /// The length of the verification code is invalid.
+    /// </summary>
+    InvalidLength,
 }

@@ -21,105 +21,104 @@ using AppMotor.Core.Utils;
 
 using JetBrains.Annotations;
 
-namespace HDVP
+namespace HDVP;
+
+/// <summary>
+/// Represents the salt using in a <see cref="HdvpVerificationCode"/>
+/// </summary>
+public sealed class HdvpSalt : IEquatable<HdvpSalt>
 {
     /// <summary>
-    /// Represents the salt using in a <see cref="HdvpVerificationCode"/>
+    /// The length an HDVP salt must have.
     /// </summary>
-    public sealed class HdvpSalt : IEquatable<HdvpSalt>
+    [PublicAPI]
+    public static int SaltLength => 32;
+
+    /// <summary>
+    /// The bytes this salt represents.
+    /// </summary>
+    [PublicAPI]
+    public ImmutableArray<byte> Value { get; }
+
+    /// <summary>
+    /// Creates an instance of this class for a pre-existing salt.
+    /// </summary>
+    /// <param name="value">The salt; must be exactly 32 bytes long (see <see cref="SaltLength"/>).</param>
+    public HdvpSalt(IReadOnlyCollection<byte> value)
     {
-        /// <summary>
-        /// The length an HDVP salt must have.
-        /// </summary>
-        [PublicAPI]
-        public static int SaltLength => 32;
+        Validate.ArgumentWithName(nameof(value)).IsNotNull(value);
 
-        /// <summary>
-        /// The bytes this salt represents.
-        /// </summary>
-        [PublicAPI]
-        public ImmutableArray<byte> Value { get; }
-
-        /// <summary>
-        /// Creates an instance of this class for a pre-existing salt.
-        /// </summary>
-        /// <param name="value">The salt; must be exactly 32 bytes long (see <see cref="SaltLength"/>).</param>
-        public HdvpSalt(IReadOnlyCollection<byte> value)
+        if (value.Count != SaltLength)
         {
-            Validate.ArgumentWithName(nameof(value)).IsNotNull(value);
-
-            if (value.Count != SaltLength)
-            {
-                throw new ArgumentException($"The salt must be {SaltLength} bytes long but was {value.Count} bytes long.");
-            }
-
-            this.Value = value.ToImmutableArray();
+            throw new ArgumentException($"The salt must be {SaltLength} bytes long but was {value.Count} bytes long.");
         }
 
-        /// <summary>
-        /// Implicit conversion from byte array.
-        /// </summary>
-        public static implicit operator HdvpSalt(byte[] bytes)
+        this.Value = value.ToImmutableArray();
+    }
+
+    /// <summary>
+    /// Implicit conversion from byte array.
+    /// </summary>
+    public static implicit operator HdvpSalt(byte[] bytes)
+    {
+        return new(bytes);
+    }
+
+    /// <summary>
+    /// Creates a new, cryptographically random HDVP salt.
+    /// </summary>
+    [MustUseReturnValue]
+    public static HdvpSalt CreateNewSalt()
+    {
+        using var randomNumberGenerator = RandomNumberGenerator.Create();
+
+        var salt = new byte[SaltLength];
+        randomNumberGenerator.GetBytes(salt);
+
+        return new HdvpSalt(salt);
+    }
+
+    /// <inheritdoc />
+    public bool Equals(HdvpSalt? other)
+    {
+        if (ReferenceEquals(null, other))
         {
-            return new(bytes);
+            return false;
         }
 
-        /// <summary>
-        /// Creates a new, cryptographically random HDVP salt.
-        /// </summary>
-        [MustUseReturnValue]
-        public static HdvpSalt CreateNewSalt()
+        if (ReferenceEquals(this, other))
         {
-            using var randomNumberGenerator = RandomNumberGenerator.Create();
-
-            var salt = new byte[SaltLength];
-            randomNumberGenerator.GetBytes(salt);
-
-            return new HdvpSalt(salt);
+            return true;
         }
 
-        /// <inheritdoc />
-        public bool Equals(HdvpSalt? other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
+        return this.Value.SequenceEqual(other.Value);
+    }
 
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
+    /// <inheritdoc />
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || obj is HdvpSalt other && Equals(other);
+    }
 
-            return this.Value.SequenceEqual(other.Value);
-        }
+    /// <inheritdoc />
+    public override int GetHashCode()
+    {
+        return BitConverter.ToInt32(this.Value.AsSpan());
+    }
 
-        /// <inheritdoc />
-        public override bool Equals(object? obj)
-        {
-            return ReferenceEquals(this, obj) || obj is HdvpSalt other && Equals(other);
-        }
+    /// <summary>
+    /// Equals operator
+    /// </summary>
+    public static bool operator ==(HdvpSalt? left, HdvpSalt? right)
+    {
+        return Equals(left, right);
+    }
 
-        /// <inheritdoc />
-        public override int GetHashCode()
-        {
-            return BitConverter.ToInt32(this.Value.AsSpan());
-        }
-
-        /// <summary>
-        /// Equals operator
-        /// </summary>
-        public static bool operator ==(HdvpSalt? left, HdvpSalt? right)
-        {
-            return Equals(left, right);
-        }
-
-        /// <summary>
-        /// Not-equals operator
-        /// </summary>
-        public static bool operator !=(HdvpSalt? left, HdvpSalt? right)
-        {
-            return !Equals(left, right);
-        }
+    /// <summary>
+    /// Not-equals operator
+    /// </summary>
+    public static bool operator !=(HdvpSalt? left, HdvpSalt? right)
+    {
+        return !Equals(left, right);
     }
 }

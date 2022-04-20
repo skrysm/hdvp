@@ -18,23 +18,22 @@ using AppMotor.CliApp.CommandLine;
 
 using HDVP.Util.Properties;
 
-namespace HDVP.Util
+namespace HDVP.Util;
+
+internal static class Program
 {
-    internal static class Program
+    private static int Main(string[] args)
     {
-        private static int Main(string[] args)
+        var app = new CliApplicationWithVerbs()
         {
-            var app = new CliApplicationWithVerbs()
+            AppDescription = LocalizableResources.AppDescription,
+
+            Verbs = new[]
             {
-                AppDescription = LocalizableResources.AppDescription,
+                new CliVerb("benchmark", new BenchmarkCommand()),
+            },
+        };
 
-                Verbs = new[]
-                {
-                    new CliVerb("benchmark", new BenchmarkCommand()),
-                },
-            };
-
-            return app.Run(args);
-        }
+        return app.Run(args);
     }
 }

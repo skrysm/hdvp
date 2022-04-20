@@ -24,62 +24,61 @@ using AppMotor.Core.Exceptions;
 using HDVP.Internals;
 using HDVP.Util.Properties;
 
-namespace HDVP.Util
+namespace HDVP.Util;
+
+internal sealed class BenchmarkCommand : CliCommand
 {
-    internal sealed class BenchmarkCommand : CliCommand
+    /// <inheritdoc />
+    public override string? HelpText => LocalizableResources.HelpText_Benchmark;
+
+    private CliParam<int> Seconds { get; } = new("--seconds", "-s")
     {
-        /// <inheritdoc />
-        public override string? HelpText => LocalizableResources.HelpText_Benchmark;
+        HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
+        DefaultValue = 10,
+    };
 
-        private CliParam<int> Seconds { get; } = new("--seconds", "-s")
+    private CliParam<int> HashLength { get; } = new("--hash-length", "-l")
+    {
+        HelpText = LocalizableResources.HelpText_Benchmark_HashLength,
+        DefaultValue = 8,
+    };
+
+    /// <inheritdoc />
+    protected override CliCommandExecutor Executor => new(Execute);
+
+    private void Execute()
+    {
+        if (this.Seconds.Value < 1)
         {
-            HelpText = LocalizableResources.HelpText_Benchmark_Seconds,
-            DefaultValue = 10,
-        };
-
-        private CliParam<int> HashLength { get; } = new("--hash-length", "-l")
-        {
-            HelpText = LocalizableResources.HelpText_Benchmark_HashLength,
-            DefaultValue = 8,
-        };
-
-        /// <inheritdoc />
-        protected override CliCommandExecutor Executor => new(Execute);
-
-        private void Execute()
-        {
-            if (this.Seconds.Value < 1)
-            {
-                throw new ErrorMessageException(LocalizableResources.Benchmark_Error_TooFewSeconds);
-            }
-
-            Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);
-            Terminal.WriteLine();
-
-            var salt = HdvpSalt.CreateNewSalt();
-            var verifiableData = new HdvpVerifiableData(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
-
-            var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
-
-            Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
-            Terminal.WriteLine();
-            Terminal.WriteLine();
-
-            Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, this.Seconds.Value);
-
-            var testTime = TimeSpan.FromSeconds(this.Seconds.Value);
-            var startTime = DateTime.UtcNow;
-
-            int hashCount = 0;
-            while (DateTime.UtcNow - startTime < testTime)
-            {
-                // ReSharper disable once MustUseReturnValue
-                HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
-                hashCount++;
-            }
-
-            var timeSpent = DateTime.UtcNow - startTime;
-            Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
+            throw new ErrorMessageException(LocalizableResources.Benchmark_Error_TooFewSeconds);
         }
+
+        Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);
+        Terminal.WriteLine();
+
+        var salt = HdvpSalt.CreateNewSalt();
+        var verifiableData = new HdvpVerifiableData(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
+
+        var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
+
+        Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
+        Terminal.WriteLine();
+        Terminal.WriteLine();
+
+        Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, this.Seconds.Value);
+
+        var testTime = TimeSpan.FromSeconds(this.Seconds.Value);
+        var startTime = DateTime.UtcNow;
+
+        int hashCount = 0;
+        while (DateTime.UtcNow - startTime < testTime)
+        {
+            // ReSharper disable once MustUseReturnValue
+            HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
+            hashCount++;
+        }
+
+        var timeSpent = DateTime.UtcNow - startTime;
+        Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
     }
 }

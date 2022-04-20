@@ -20,71 +20,70 @@ using Shouldly;
 
 using Xunit;
 
-namespace HDVP.Tests
+namespace HDVP.Tests;
+
+public sealed class HdvpVerifiableDataTests
 {
-    public sealed class HdvpVerifiableDataTests
+    private const int EXPECTED_DATA_HASH_LENGTH = 512 / 8;
+
+    [Fact]
+    public void Test_FromBytes()
     {
-        private const int EXPECTED_DATA_HASH_LENGTH = 512 / 8;
+        byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
+        HdvpVerifiableData data1 = new(baseData);
+        HdvpVerifiableData data2 = baseData;
 
-        [Fact]
-        public void Test_FromBytes()
-        {
-            byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
-            HdvpVerifiableData data1 = new(baseData);
-            HdvpVerifiableData data2 = baseData;
+        data1.Hash.ShouldBe(data2.Hash);
+        data1.Hash.Length.ShouldBe(EXPECTED_DATA_HASH_LENGTH);
+    }
 
-            data1.Hash.ShouldBe(data2.Hash);
-            data1.Hash.Length.ShouldBe(EXPECTED_DATA_HASH_LENGTH);
-        }
+    [Fact]
+    public void Test_FromStream()
+    {
+        byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
+        HdvpVerifiableData data1 = HdvpVerifiableData.ReadFromStream(new MemoryStream(baseData, writable: false));
+        HdvpVerifiableData data2 = new(baseData);
 
-        [Fact]
-        public void Test_FromStream()
-        {
-            byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
-            HdvpVerifiableData data1 = HdvpVerifiableData.ReadFromStream(new MemoryStream(baseData, writable: false));
-            HdvpVerifiableData data2 = new(baseData);
+        data1.Hash.ShouldBe(data2.Hash);
+        data1.Hash.Length.ShouldBe(EXPECTED_DATA_HASH_LENGTH);
+    }
 
-            data1.Hash.ShouldBe(data2.Hash);
-            data1.Hash.Length.ShouldBe(EXPECTED_DATA_HASH_LENGTH);
-        }
+    [Fact]
+    public void Test_Equals()
+    {
+        byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
+        byte[] randomTestData = new byte[128];
 
-        [Fact]
-        public void Test_Equals()
-        {
-            byte[] baseData = TestDataProvider.CreateVerifiableDataRaw();
-            byte[] randomTestData = new byte[128];
+        new Random(1234).NextBytes(randomTestData);
 
-            new Random(1234).NextBytes(randomTestData);
+        HdvpVerifiableData data1 = new(baseData);
+        HdvpVerifiableData data2 = new(baseData);
+        HdvpVerifiableData data3 = new(randomTestData);
 
-            HdvpVerifiableData data1 = new(baseData);
-            HdvpVerifiableData data2 = new(baseData);
-            HdvpVerifiableData data3 = new(randomTestData);
+        data1.Equals(data1).ShouldBe(true);
+        data1.Equals(data2).ShouldBe(true);
+        data1.Equals(data3).ShouldBe(false);
+        data1.Equals(null).ShouldBe(false);
 
-            data1.Equals(data1).ShouldBe(true);
-            data1.Equals(data2).ShouldBe(true);
-            data1.Equals(data3).ShouldBe(false);
-            data1.Equals(null).ShouldBe(false);
+        data1!.Equals((object)data1).ShouldBe(true);
+        data1.Equals((object)data2).ShouldBe(true);
+        data1.Equals((object)data3).ShouldBe(false);
+        data1.Equals((object?)null).ShouldBe(false);
 
-            data1!.Equals((object)data1).ShouldBe(true);
-            data1.Equals((object)data2).ShouldBe(true);
-            data1.Equals((object)data3).ShouldBe(false);
-            data1.Equals((object?)null).ShouldBe(false);
+        (data1 == data2).ShouldBe(true);
+        (data1 == data3).ShouldBe(false);
+        (data1 != data2).ShouldBe(false);
+        (data1 != data3).ShouldBe(true);
+    }
 
-            (data1 == data2).ShouldBe(true);
-            (data1 == data3).ShouldBe(false);
-            (data1 != data2).ShouldBe(false);
-            (data1 != data3).ShouldBe(true);
-        }
+    [Fact]
+    public void Test_GetHashCode()
+    {
+        var bytes = TestDataProvider.CreateNonRandomSaltRaw();
 
-        [Fact]
-        public void Test_GetHashCode()
-        {
-            var bytes = TestDataProvider.CreateNonRandomSaltRaw();
+        HdvpVerifiableData data1 = new(bytes);
+        HdvpVerifiableData data2 = new(bytes);
 
-            HdvpVerifiableData data1 = new(bytes);
-            HdvpVerifiableData data2 = new(bytes);
-
-            data1.GetHashCode().ShouldBe(data2.GetHashCode());
-        }
+        data1.GetHashCode().ShouldBe(data2.GetHashCode());
     }
 }

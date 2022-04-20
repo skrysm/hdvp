@@ -18,24 +18,23 @@ using JetBrains.Annotations;
 
 using Konscious.Security.Cryptography;
 
-namespace HDVP.Internals
+namespace HDVP.Internals;
+
+internal static class HdvpSlowHashAlgorithm
 {
-    internal static class HdvpSlowHashAlgorithm
+    [MustUseReturnValue]
+    public static byte[] CreateHash(HdvpVerifiableData data, HdvpSalt salt, int byteCount)
     {
-        [MustUseReturnValue]
-        public static byte[] CreateHash(HdvpVerifiableData data, HdvpSalt salt, int byteCount)
-        {
-            using var argon2 = new Argon2id(data.Hash.ToArray());
+        using var argon2 = new Argon2id(data.Hash.ToArray());
 
-            argon2.Salt = salt.Value.ToArray();
-            argon2.DegreeOfParallelism = 8; // 8 = max CPU usage on CPU with 4 cores and hyper threading
-            argon2.MemorySize = 150_000; // kB
+        argon2.Salt = salt.Value.ToArray();
+        argon2.DegreeOfParallelism = 8; // 8 = max CPU usage on CPU with 4 cores and hyper threading
+        argon2.MemorySize = 150_000;    // kB
 
-            // This gives about 0.3 hashes per second on a Raspberry Pi 4 and about
-            // 4 hashes per second on a medium desktop CPU.
-            argon2.Iterations = 2;
+        // This gives about 0.3 hashes per second on a Raspberry Pi 4 and about
+        // 4 hashes per second on a medium desktop CPU.
+        argon2.Iterations = 2;
 
-            return argon2.GetBytes(byteCount);
-        }
+        return argon2.GetBytes(byteCount);
     }
 }
