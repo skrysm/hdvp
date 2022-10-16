@@ -48,18 +48,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{0E1A7D87
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		CodeQL_Release|Any CPU = CodeQL_Release|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.CodeQL_Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.CodeQL_Release|Any CPU.Build.0 = Release|Any CPU
 		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26D5C2DF-CD12-4074-B926-59D3695B1F96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D47CDF14-D024-416E-BB47-25ABB81FF7B1}.CodeQL_Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D47CDF14-D024-416E-BB47-25ABB81FF7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D47CDF14-D024-416E-BB47-25ABB81FF7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D47CDF14-D024-416E-BB47-25ABB81FF7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D47CDF14-D024-416E-BB47-25ABB81FF7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C44E362-4A0A-4443-B50B-4B52CBBC9467}.CodeQL_Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C44E362-4A0A-4443-B50B-4B52CBBC9467}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6C44E362-4A0A-4443-B50B-4B52CBBC9467}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C44E362-4A0A-4443-B50B-4B52CBBC9467}.Release|Any CPU.ActiveCfg = Release|Any CPU
