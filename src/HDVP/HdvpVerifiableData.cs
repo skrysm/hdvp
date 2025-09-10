@@ -100,7 +100,7 @@ public sealed class HdvpVerifiableData : IEquatable<HdvpVerifiableData>
     /// <inheritdoc />
     public bool Equals(HdvpVerifiableData? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

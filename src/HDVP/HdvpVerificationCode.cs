@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using AppMotor.Core.Utils;
+using AppMotor.CoreKit.Utils;
 
 using HDVP.Internals;
 
@@ -130,7 +130,7 @@ public sealed class HdvpVerificationCode
         char lengthChar = CodeEncoding.EncodeSingleValue(codeLength - MinCodeLength);
 
         // Assemble verification code
-        var verificationCode = lengthChar + slowHashAsZBase32.Substring(0, codeLength - 1);
+        var verificationCode = lengthChar + slowHashAsZBase32[..(codeLength - 1)];
 
         return new HdvpVerificationCode(verificationCode, salt);
     }

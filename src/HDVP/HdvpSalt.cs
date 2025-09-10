@@ -17,7 +17,7 @@
 using System.Collections.Immutable;
 using System.Security.Cryptography;
 
-using AppMotor.Core.Utils;
+using AppMotor.CoreKit.Utils;
 
 using JetBrains.Annotations;
 
@@ -81,7 +81,7 @@ public sealed class HdvpSalt : IEquatable<HdvpSalt>
     /// <inheritdoc />
     public bool Equals(HdvpSalt? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }

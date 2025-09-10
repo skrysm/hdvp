@@ -4,7 +4,7 @@
   <Import Project="$(ProjectCommonsDirectory)Project.NuGetPackage.props" />
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
 
     <!-- See also: https://docs.microsoft.com/en-us/nuget/create-packages/prerelease-packages -->
     <Version>0.8.1</Version>
@@ -31,9 +31,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.Core" Version="0.17.0" />
-    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.0" />
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
+    <PackageReference Include="AppMotor.CoreKit" Version="9.0.1" />
+    <PackageReference Include="Konscious.Security.Cryptography.Argon2" Version="1.3.1" />
+    <PackageReference Include="System.Collections.Immutable" Version="9.0.9" />
   </ItemGroup>
 
   <ItemGroup>

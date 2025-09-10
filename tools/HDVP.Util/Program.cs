@@ -14,26 +14,19 @@
 // limitations under the License.
 #endregion
 
-using AppMotor.CliApp.CommandLine;
+using AppMotor.CliKit.CommandLine;
 
+using HDVP.Util;
 using HDVP.Util.Properties;
 
-namespace HDVP.Util;
-
-internal static class Program
+var app = new CliApplicationWithVerbs()
 {
-    private static int Main(string[] args)
-    {
-        var app = new CliApplicationWithVerbs()
-        {
-            AppDescription = LocalizableResources.AppDescription,
+    AppDescription = LocalizableResources.AppDescription,
 
-            Verbs = new[]
-            {
-                new CliVerb("benchmark", new BenchmarkCommand()),
-            },
-        };
+    Verbs =
+    [
+        new CliVerb("benchmark", new BenchmarkCommand()),
+    ],
+};
 
-        return app.Run(args);
-    }
-}
+return app.Run(args);

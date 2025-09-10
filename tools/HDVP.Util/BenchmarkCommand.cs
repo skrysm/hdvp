@@ -18,8 +18,8 @@
 
 using System.Text;
 
-using AppMotor.CliApp.CommandLine;
-using AppMotor.Core.Exceptions;
+using AppMotor.CliKit.CommandLine;
+using AppMotor.CoreKit.Exceptions;
 
 using HDVP.Internals;
 using HDVP.Util.Properties;
@@ -53,19 +53,19 @@ internal sealed class BenchmarkCommand : CliCommand
             throw new ErrorMessageException(LocalizableResources.Benchmark_Error_TooFewSeconds);
         }
 
-        Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);
-        Terminal.WriteLine();
+        this.Terminal.WriteLine(LocalizableResources.Benchmark_CalculateFirstHash);
+        this.Terminal.WriteLine();
 
         var salt = HdvpSalt.CreateNewSalt();
         var verifiableData = new HdvpVerifiableData(Encoding.UTF8.GetBytes("Lorem ipsum dolor sit amet, consetetur sadipscing elitr"));
 
         var firstSlowHash = HdvpSlowHashAlgorithm.CreateHash(verifiableData, salt, byteCount: this.HashLength.Value);
 
-        Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
-        Terminal.WriteLine();
-        Terminal.WriteLine();
+        this.Terminal.WriteLine(LocalizableResources.Benchmark_FirstHashResult + " " + BitConverter.ToString(firstSlowHash));
+        this.Terminal.WriteLine();
+        this.Terminal.WriteLine();
 
-        Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, this.Seconds.Value);
+        this.Terminal.WriteLine(LocalizableResources.Benchmark_RunIntro, this.Seconds.Value);
 
         var testTime = TimeSpan.FromSeconds(this.Seconds.Value);
         var startTime = DateTime.UtcNow;
@@ -79,6 +79,6 @@ internal sealed class BenchmarkCommand : CliCommand
         }
 
         var timeSpent = DateTime.UtcNow - startTime;
-        Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
+        this.Terminal.WriteLine(LocalizableResources.Benchmark_HashesPerSecondResult, hashCount / timeSpent.TotalSeconds);
     }
 }

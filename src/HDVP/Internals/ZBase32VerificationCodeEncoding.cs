@@ -14,7 +14,7 @@
 // limitations under the License.
 #endregion
 
-using AppMotor.Core.Utils;
+using AppMotor.CoreKit.Utils;
 
 namespace HDVP.Internals;
 
