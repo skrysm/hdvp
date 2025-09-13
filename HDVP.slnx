@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/_Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="DESIGN-NOTES.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="README.md" />
+    <File Path="SPEC.md" />
+  </Folder>
+  <Folder Name="/_Solution Items/_ProjectCommons/">
+    <File Path="_ProjectCommons/CA.globalconfig" />
+    <File Path="_ProjectCommons/Common.Directory.Build.props" />
+    <File Path="_ProjectCommons/Common.Directory.Build.targets" />
+    <File Path="_ProjectCommons/Project.Code.props" />
+    <File Path="_ProjectCommons/Project.Code_Packages.props" />
+    <File Path="_ProjectCommons/Project.NuGetPackage.props" />
+    <File Path="_ProjectCommons/Project.NuGetPackage_Post.props" />
+    <File Path="_ProjectCommons/Project.Sample.props" />
+    <File Path="_ProjectCommons/Project.Shared.props" />
+    <File Path="_ProjectCommons/Project.Shared_Post.props" />
+    <File Path="_ProjectCommons/Project.Tests.props" />
+    <File Path="_ProjectCommons/Project.Tests_Packages.props" />
+    <File Path="_ProjectCommons/Project.Tool.props" />
+    <File Path="_ProjectCommons/StyleGuide.globalconfig" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="tests/HDVP.Tests/HDVP.Tests.csproj" />
+  </Folder>
+  <Folder Name="/Tools/">
+    <Project Path="tools/HDVP.Util/HDVP.Util.csproj" />
+  </Folder>
+  <Project Path="src/HDVP/HDVP.csproj" />
+</Solution>
