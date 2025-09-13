@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AppMotor.CliKit" Version="9.0.1" />
+    <PackageReference Include="AppMotor.CliKit" Version="9.0.2" />
   </ItemGroup>
 
   <ItemGroup>
